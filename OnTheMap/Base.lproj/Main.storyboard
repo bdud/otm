@@ -33,7 +33,7 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fZZ-4H-MJq">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="bill@billdawson.com" borderStyle="roundedRect" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fZZ-4H-MJq">
                                 <rect key="frame" x="20" y="264" width="560" height="30"/>
                                 <animations/>
                                 <constraints>
@@ -42,7 +42,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress"/>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="92i-3N-xYB">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="[jieTGW6ftorC2" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="92i-3N-xYB">
                                 <rect key="frame" x="20" y="302" width="560" height="30"/>
                                 <animations/>
                                 <constraints>
@@ -58,6 +58,9 @@
                                     <constraint firstAttribute="height" constant="30" id="Oys-CW-cEN"/>
                                 </constraints>
                                 <state key="normal" title="Login"/>
+                                <connections>
+                                    <action selector="loginTouchUp:" destination="ter-Hk-dkt" eventType="touchUpInside" id="zsX-sk-cGC"/>
+                                </connections>
                             </button>
                         </subviews>
                         <animations/>
@@ -79,6 +82,8 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="emailField" destination="fZZ-4H-MJq" id="iFB-Qq-Rz1"/>
+                        <outlet property="passwordField" destination="92i-3N-xYB" id="Z8c-GF-ToX"/>
                         <segue destination="4RR-LD-2oP" kind="show" id="F05-6K-qUO"/>
                     </connections>
                 </viewController>

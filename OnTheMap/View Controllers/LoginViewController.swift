@@ -10,6 +10,14 @@ import UIKit
 
 class LoginViewController: UIViewController {
 
+    // MARK: - Outlets
+
+    @IBOutlet weak var emailField: UITextField!
+    @IBOutlet weak var passwordField: UITextField!
+
+
+    // MARK: - Overrides
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -32,4 +40,19 @@ class LoginViewController: UIViewController {
     }
     */
 
+    // MARK: - Actions
+
+    @IBAction func loginTouchUp(sender: AnyObject) {
+        UdacityClient.sharedInstance().authenticate(emailField.text!, password: passwordField.text!) { (success, errorString) -> Void in
+            if (success) {
+                // TODO performSegueWithIdentifier(", sender: <#T##AnyObject?#>)
+            }
+            else if let errorString = errorString {
+                print(errorString)
+            }
+            else {
+                print("An unknown error occurred while attempting to authenticate with Udacity")
+            }
+        }
+    }
 }
