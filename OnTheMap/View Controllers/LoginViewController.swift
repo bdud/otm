@@ -28,30 +28,43 @@ class LoginViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+
 
     /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    // Get the new view controller using segue.destinationViewController.
+    // Pass the selected object to the new view controller.
     }
     */
+
+    // MARK: - Other
+
+    func showLoginAlert(message: String) {
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            let controller = UIAlertController(title: "Login Failure", message: message, preferredStyle: UIAlertControllerStyle.Alert)
+            let action = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
+            controller.addAction(action)
+            self.presentViewController(controller, animated: true, completion: nil)
+        }
+    }
 
     // MARK: - Actions
 
     @IBAction func loginTouchUp(sender: AnyObject) {
         UdacityClient.sharedInstance().authenticate(emailField.text!, password: passwordField.text!) { (success, errorString) -> Void in
             if (success) {
-                // TODO performSegueWithIdentifier(", sender: <#T##AnyObject?#>)
+                self.performSegueWithIdentifier("ToTabBar", sender: self)
             }
             else if let errorString = errorString {
                 print(errorString)
+                self.showLoginAlert(errorString)
             }
             else {
                 print("An unknown error occurred while attempting to authenticate with Udacity")
+                self.showLoginAlert(UdacityClient.ErrorMessages.Connection)
             }
         }
     }

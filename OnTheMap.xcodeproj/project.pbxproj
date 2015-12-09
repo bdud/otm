@@ -20,6 +20,7 @@
 		A996F3521BE26AA900977E23 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A996F3511BE26AA900977E23 /* Assets.xcassets */; };
 		A996F3551BE26AA900977E23 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A996F3531BE26AA900977E23 /* LaunchScreen.storyboard */; };
 		A996F35D1BE26CE800977E23 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A996F35C1BE26CE800977E23 /* MapKit.framework */; };
+		A9EDE8331C036E9400A8E8E7 /* UdacityConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EDE8321C036E9400A8E8E7 /* UdacityConfig.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		A996F3541BE26AA900977E23 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A996F3561BE26AA900977E23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A996F35C1BE26CE800977E23 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		A9EDE8321C036E9400A8E8E7 /* UdacityConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UdacityConfig.swift; path = Models/Clients/Udacity/UdacityConfig.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 				A90B08EE1BF2294900CBD70A /* UdacityConstants.swift */,
 				A90B08F01BF2297A00CBD70A /* UdacityClient.swift */,
 				A90B08F61BF2353C00CBD70A /* UdacityClientConvenience.swift */,
+				A9EDE8321C036E9400A8E8E7 /* UdacityConfig.swift */,
 			);
 			name = Udacity;
 			sourceTree = "<group>";
@@ -213,6 +216,7 @@
 				A90B08F31BF22AD600CBD70A /* ClientConvenience.swift in Sources */,
 				A90B08F11BF2297A00CBD70A /* UdacityClient.swift in Sources */,
 				A90B08F71BF2353C00CBD70A /* UdacityClientConvenience.swift in Sources */,
+				A9EDE8331C036E9400A8E8E7 /* UdacityConfig.swift in Sources */,
 				A90B08F51BF232FC00CBD70A /* ClientConstants.swift in Sources */,
 				A90B08E51BF1762E00CBD70A /* LoginViewController.swift in Sources */,
 				A90B08E71BF1770D00CBD70A /* MapViewController.swift in Sources */,
