@@ -11,7 +11,11 @@ import Foundation
 extension UdacityClient {
 
     func apiUrl(endpoint: String) -> NSURL {
-        return NSURL(string: "\(Constants.APIBaseUrl)\(endpoint)")!
+        var resolved = endpoint
+        if let accountKey = UdacityConfig.sharedUdacityConfig().AccountKey {
+            resolved = endpoint.stringByReplacingOccurrencesOfString("[user]", withString: accountKey)
+        }
+        return NSURL(string: "\(Constants.APIBaseUrl)\(resolved)")!
     }
 
     func performDataTaskWithRequest(request: NSURLRequest, andCompletionHandler handler: (success: Bool, httpStatusCode: Int?, errorMessage: String?, jsonData: AnyObject?) -> Void) {

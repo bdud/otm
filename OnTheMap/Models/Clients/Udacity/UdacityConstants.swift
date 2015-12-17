@@ -21,6 +21,7 @@ extension UdacityClient {
 
     struct APIEndpoints {
         static let Session = "session"
+        static let User = "users/[user]"
     }
 
     struct JSONKeys {
@@ -31,5 +32,9 @@ extension UdacityClient {
         static let AccountKey = "key"
         static let Session = "session"
         static let SessionId = "id"
+        static let SessionExpiration = "expiration"
+        static let User = "user"
+        static let FirstName = "first_name"
+        static let LastName = "last_name"
     }
 }

@@ -43,14 +43,11 @@ class UdacityClient {
                 return
             }
 
-            print("Auth Success")
             guard let jsonData = jsonData else {
                 print("Success for authentication, but response data empty")
                 completionHandler(success: false, errorString: ErrorMessages.Connection)
                 return
             }
-
-            print("\(jsonData)")
 
             let config = UdacityConfig.sharedUdacityConfig()
 
@@ -81,10 +78,90 @@ class UdacityClient {
             }
 
             config.SessionId = sessionId
+
+            guard let sessionExpiration = sessionDict[JSONKeys.SessionExpiration] as? String else {
+                print("Session Expiration missing from response")
+                completionHandler(success: false, errorString: ErrorMessages.Connection)
+                return
+            }
+
+            let formatter = NSDateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+            formatter.timeZone = NSTimeZone(forSecondsFromGMT: 0)
+            formatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+            let expDate = formatter.dateFromString(sessionExpiration)
+            config.SessionExpiration = expDate
+
             completionHandler(success: true, errorString: nil)
         }
 
     }
+
+    func fetchUserInfo(completionHandler: (success: Bool, errorString: String?) -> Void) {
+
+        let url = apiUrl(APIEndpoints.User)
+
+        performDataTaskWithRequest(NSURLRequest(URL: url)) { (success, httpStatusCode, errorMessage, jsonData) -> Void in
+            guard success else {
+                guard let httpStatusCode = httpStatusCode else {
+                    completionHandler(success: false, errorString: ErrorMessages.Connection)
+                    return
+                }
+
+                if httpStatusCode == 403 {
+                    completionHandler(success: false, errorString: ErrorMessages.Credentials)
+                    return
+                }
+
+                guard let errorMessage = errorMessage else {
+                    print("Error making user info request, but no message.")
+                    completionHandler(success: false, errorString: ErrorMessages.Connection)
+                    return
+                }
+
+                print(errorMessage);
+                completionHandler(success: false, errorString: ErrorMessages.Connection)
+                return
+            }
+
+            guard let jsonData = jsonData else {
+                print("Success for user info request, but response data empty")
+                completionHandler(success: false, errorString: ErrorMessages.Connection)
+                return
+            }
+
+            let config = UdacityConfig.sharedUdacityConfig()
+
+            guard let userDict = jsonData[JSONKeys.User] as? NSDictionary else {
+                print("user data missing from response")
+                completionHandler(success: false, errorString: ErrorMessages.Connection)
+                return
+            }
+
+            guard let lastName = userDict[JSONKeys.LastName] as? String else {
+                print("last name key missing from response")
+                completionHandler(success: false, errorString: ErrorMessages.Connection)
+                return
+            }
+
+            config.LastName = lastName
+
+            guard let firstName = userDict[JSONKeys.FirstName] as? String else {
+                print("first name key missing from response")
+                completionHandler(success: false, errorString: ErrorMessages.Connection)
+                return
+            }
+
+            config.FirstName = firstName
+            config.persist()
+
+                        
+            completionHandler(success: true, errorString: nil)
+        }
+        
+    }
+
+
 
     // MARK: Shared Instance
 

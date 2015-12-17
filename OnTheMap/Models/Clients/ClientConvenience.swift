@@ -38,7 +38,7 @@ class ClientConvenience {
 
             guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
                 if let response = response as? NSHTTPURLResponse {
-                    handler(success: false, httpStatusCode: response.statusCode, errorMessage: "Your invalid response. Status code: \(response.statusCode)", responseData: nil)
+                    handler(success: false, httpStatusCode: response.statusCode, errorMessage: "Invalid response. Status code: \(response.statusCode)", responseData: nil)
                 } else if let response = response {
                     handler(success: false, httpStatusCode: nil, errorMessage: "No HTTP URL response received. Actual response: \(response)", responseData: nil)
                 } else {

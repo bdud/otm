@@ -10,6 +10,8 @@ import UIKit
 
 class LoginViewController: UIViewController {
 
+    let tabBarSegueId = "ToTabBar"
+
     // MARK: - Outlets
 
     @IBOutlet weak var emailField: UITextField!
@@ -18,27 +20,15 @@ class LoginViewController: UIViewController {
 
     // MARK: - Overrides
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+    override func viewDidAppear(animated: Bool) {
+        let config = UdacityConfig.sharedUdacityConfig()
+        if let _ = config.SessionId, sessionExpiration = config.SessionExpiration {
+            if sessionExpiration.laterDate(NSDate()).isEqualToDate(sessionExpiration) {
+                performSegueWithIdentifier(tabBarSegueId, sender: self)
+                return
+            }
+        }
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    // Get the new view controller using segue.destinationViewController.
-    // Pass the selected object to the new view controller.
-    }
-    */
 
     // MARK: - Other
 
@@ -56,7 +46,23 @@ class LoginViewController: UIViewController {
     @IBAction func loginTouchUp(sender: AnyObject) {
         UdacityClient.sharedInstance().authenticate(emailField.text!, password: passwordField.text!) { (success, errorString) -> Void in
             if (success) {
-                self.performSegueWithIdentifier("ToTabBar", sender: self)
+                UdacityClient.sharedInstance().fetchUserInfo({ (success, errorString) -> Void in
+                    guard success else {
+                        if let errorString = errorString {
+                            print(errorString)
+                            self.showLoginAlert(errorString)
+                        }
+                        else {
+                            print("An unknown error occurred while attempting to fetch Udacity user info")
+                            self.showLoginAlert(UdacityClient.ErrorMessages.Connection)
+                        }
+                        return
+                    }
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        self.performSegueWithIdentifier(self.tabBarSegueId, sender: self)
+                    })
+
+                })
             }
             else if let errorString = errorString {
                 print(errorString)
