@@ -144,7 +144,7 @@
                                 <color key="textColor" red="0.53725490200000003" green="0.61568627450000002" blue="0.69019607839999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" placeholder="Enter Your Location Here" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Txc-Vc-cmu">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" placeholder="Enter Your Location Here" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Txc-Vc-cmu" customClass="VNudgeTextField" customModule="OnTheMap" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="222" width="600" height="300"/>
                                 <color key="backgroundColor" red="0.30980392159999998" green="0.53333333329999999" blue="0.71372549019999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -193,7 +193,7 @@
                                     <action selector="submitTap:" destination="ULP-TD-A18" eventType="touchUpInside" id="XFA-zH-vQ2"/>
                                 </connections>
                             </button>
-                            <textField hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" placeholder="Enter a Link to Share Here" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fM1-ev-0bO">
+                            <textField hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" placeholder="Enter a Link to Share Here" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fM1-ev-0bO" customClass="VNudgeTextField" customModule="OnTheMap" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="64" width="600" height="158"/>
                                 <color key="backgroundColor" red="0.31764705879999999" green="0.4941176471" blue="0.66666666669999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

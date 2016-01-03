@@ -20,7 +20,8 @@ class TabBarController: UITabBarController, AddLocationViewControllerDelegate {
     // MARK: Actions
 
     @IBAction func logoutButtonTap(sender: AnyObject) {
-        UdacityConfig.sharedUdacityConfig().clear()
+        
+        UdacityClient.sharedInstance().deleteSession()
         dismissViewControllerAnimated(true, completion: nil)
     }
 
@@ -31,7 +32,7 @@ class TabBarController: UITabBarController, AddLocationViewControllerDelegate {
                 let over = UIAlertAction(title: "Overwrite", style: .Destructive, handler: { (action) -> Void in
                     self.showAddLocationViewController()
                 })
-                let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+                let cancel = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
                 avc.addAction(over)
                 avc.addAction(cancel)
                 self.presentViewController(avc, animated: true, completion: nil)

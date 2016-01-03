@@ -18,14 +18,18 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate {
 
     var delegate: AddLocationViewControllerDelegate?
 
+    let LocationPlaceholderText = "Enter Your Location Here"
+    let LinkPlaceholderText = "Enter a Link to Share Here"
+    let PlaceholderForegroundColor = UIColor(red:0.6, green:0.68, blue:0.79, alpha:1)
+
     // MARK: Outlets
     @IBOutlet weak var topLabel: UILabel!
     @IBOutlet weak var findButton: UIButton!
-    @IBOutlet weak var locationTextField: UITextField!
+    @IBOutlet weak var locationTextField: VNudgeTextField!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var bottomContainer: UIView!
     @IBOutlet weak var submitButton: UIButton!
-    @IBOutlet weak var linkTextField: UITextField!
+    @IBOutlet weak var linkTextField: VNudgeTextField!
 
     // MARK: Actions
 
@@ -108,15 +112,27 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate {
     // MARK: Instance
 
     func styleControls() {
-        topLabel.numberOfLines = 0
-        topLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
-        topLabel.text = "Where are you\nstudying\ntoday?"
-
         findButton.layer.cornerRadius = 10.0
         findButton.clipsToBounds = true
 
         submitButton.layer.cornerRadius = 10.0
         submitButton.clipsToBounds = true
+
+        topLabel.numberOfLines = 0
+        topLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
+
+        let lighterLabelColor = UIColor(red:0.47, green:0.51, blue:0.53, alpha:1)
+        let boldFont = UIFont.boldSystemFontOfSize(topLabel.font.pointSize)
+        let locationLabelAttrString = NSMutableAttributedString(string: "Where are you\n", attributes: [NSForegroundColorAttributeName: lighterLabelColor])
+        locationLabelAttrString.appendAttributedString(NSAttributedString(string: "studying", attributes: [NSForegroundColorAttributeName: UIColor(red:0.15, green:0.18, blue:0.23, alpha:1), NSFontAttributeName: boldFont]))
+        locationLabelAttrString.appendAttributedString(NSAttributedString(string: "\ntoday?", attributes: [NSForegroundColorAttributeName: lighterLabelColor]))
+        topLabel.attributedText = locationLabelAttrString
+        locationTextField.nudgeFactor = 0.2
+        linkTextField.nudgeFactor = 0.45
+
+        locationTextField.attributedPlaceholder = NSAttributedString(string: LocationPlaceholderText, attributes: [NSForegroundColorAttributeName: PlaceholderForegroundColor])
+        linkTextField.attributedPlaceholder = NSAttributedString(string: LinkPlaceholderText, attributes: [NSForegroundColorAttributeName: PlaceholderForegroundColor])
+
     }
 
 

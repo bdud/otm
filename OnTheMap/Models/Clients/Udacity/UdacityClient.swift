@@ -161,7 +161,35 @@ class UdacityClient {
         
     }
 
+    func deleteSession() {
+        UdacityConfig.sharedUdacityConfig().clear()
 
+        // Be a good citizen and clear the session up at the server.
+        let url = apiUrl(APIEndpoints.Session)
+        let req = NSMutableURLRequest(URL: url)
+        req.HTTPMethod = "DELETE"
+
+        if let cookies = NSHTTPCookieStorage.sharedHTTPCookieStorage().cookies {
+            for cookie in cookies {
+                if cookie.name == "XSRF-TOKEN" {
+                    req.setValue(cookie.value, forKey: "X-XSRF-TOKEN")
+                    break
+                }
+            }
+        }
+
+        performDataTaskWithRequest(req) { (success, httpStatusCode, errorMessage, jsonData) -> Void in
+            if success {
+                print("Session delete success")
+            }
+            else if let msg = errorMessage {
+                print("Failed to delete session: \(msg)")
+            }
+            else {
+                print("Failed to delete session. No error message.")
+            }
+        }
+    }
 
     // MARK: Shared Instance
 
