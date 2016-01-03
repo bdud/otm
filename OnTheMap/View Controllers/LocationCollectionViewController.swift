@@ -10,5 +10,5 @@ import Foundation
 
 protocol LocationCollectionViewController {
     func refreshLocations(completion: (() -> Void)?) -> Void
-    func addLocation(location: StudentLocation) -> Void
+    func locationWasAdded(_: StudentLocation) -> Void
 }

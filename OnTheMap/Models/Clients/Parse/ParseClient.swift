@@ -10,13 +10,104 @@ import Foundation
 
 class ParseClient {
 
-    func addLocation(location: StudentLocation, completionHandler: (success: Bool, errorString: String?)) {
-        
+    var locations: [StudentLocation]?
+
+    func addLocation(location: StudentLocation, completionHandler: (success: Bool, errorString: String?) -> Void) {
+        guard let data = location.jsonData() else {
+            print("No JSON data for location")
+            completionHandler(success: false, errorString: Errors.General)
+            return
+        }
+
+        var req : NSMutableURLRequest
+
+        if let uniqueId = location.uniqueKey {
+            if let existing = locationWithUniqueKey(uniqueId), objectId = existing.parseObjectId {
+                req = preparePUTRequest(objectId)
+            }
+            else {
+                req = preparePOSTRequest()
+            }
+        }
+        else {
+            req = preparePOSTRequest()
+        }
+
+        req.HTTPBody = data
+
+        ClientConvenience.sharedInstance().performDataTaskWithRequest(req) { (success, httpStatusCode, errorMessage, responseData) -> Void in
+            guard success else {
+                if let data = responseData {
+                    if let dataString = NSString(data: data, encoding: NSUTF8StringEncoding) {
+                        print("Data String from failed attempt: \(dataString)")
+                    }
+                }
+                guard let _ = httpStatusCode else {
+                    // no http status code, no network connection?
+                    completionHandler(success: false, errorString: Errors.Network)
+                    return
+                }
+                guard let errorMessage = errorMessage else {
+                    print("Unknown error from performDataTaskWithRequest")
+                    completionHandler(success: false, errorString: Errors.General)
+                    return
+                }
+                print("Error string from performDataTaskWithRequest: \(errorMessage)")
+                completionHandler(success: false, errorString: Errors.General)
+                return
+            }
+
+            completionHandler(success: true, errorString: nil)
+        }
+
+
+    }
+
+    func deleteLocationWithUniqueId(id: String, completionHandler: (success: Bool, errorMessage: String?) -> Void) {
+        guard let location = locationWithUniqueKey(id), objectId = location.parseObjectId else {
+            completionHandler(success: false, errorMessage: "No existing location with that ID")
+            return
+        }
+        let urlString = "\(Constants.ApiUrl)/\(objectId)"
+        guard let url =  NSURL(string: urlString) else {
+            print("Bad url: \(urlString)")
+            return
+        }
+
+        let req = prepareRequest()
+        req.HTTPMethod = "DELETE"
+        req.URL = url
+
+        ClientConvenience.sharedInstance().performDataTaskWithRequest(req) { (success, httpStatusCode, errorMessage, responseData) -> Void in
+            guard success else {
+                if let code = httpStatusCode {
+                    print("DELETE failed with status code \(code)")
+                }
+                else {
+                    print("DELETE failed with no http status code")
+                }
+                if let msg = errorMessage {
+                    print("Error message: \(msg)")
+                }
+                else {
+                    print("No error message")
+                }
+                if let data = responseData {
+                    let str = String(data: data, encoding: NSUTF8StringEncoding)
+                    print("Did receive data in failed request's response: \(str)")
+                }
+                completionHandler(success: false, errorMessage: errorMessage)
+                return
+            }
+            print("Deletion successful")
+            completionHandler(success: true, errorMessage: nil)
+        }
+
     }
 
     func fetchLocations(completionHandler: (success: Bool, errorString: String?, data: [StudentLocation]?) -> Void) {
 
-        ClientConvenience.sharedInstance().performDataTaskWithRequest(prepareGETRequest()) { (success, httpStatusCode, errorMessage, responseData) -> Void in
+        ClientConvenience.sharedInstance().performDataTaskWithRequest(prepareRequest()) { (success, httpStatusCode, errorMessage, responseData) -> Void in
             guard success else {
                 if let errorMessage = errorMessage {
                     print(errorMessage)
@@ -54,15 +145,36 @@ class ParseClient {
                 return
             }
 
-            let locations = results.map({ (elem: [String: AnyObject]) -> StudentLocation in
-                    return StudentLocation(fromDictionary: elem)
+            let locations = results.map({ (elem: [String: AnyObject]) ->
+                StudentLocation in
+                return StudentLocation(fromDictionary: elem)
             })
+
+            self.locations = locations
 
             completionHandler(success: true, errorString: nil, data: locations)
 
         }
+    }
 
+    func locationExistsWithUniqueKey(uniqueKey: String) -> Bool {
+        if let _ = locationWithUniqueKey(uniqueKey) {
+            return true
+        }
+        else {
+            return false
+        }
+    }
 
+    func locationWithUniqueKey(uniqueKey: String) -> StudentLocation? {
+        if let locations = self.locations {
+            for l in locations {
+                if l.uniqueKey == uniqueKey {
+                    return l
+                }
+            }
+        }
+        return nil
     }
 
     // MARK: Class (static) methods
@@ -73,5 +185,5 @@ class ParseClient {
         }
         return Singleton.instance
     }
-
+    
 }

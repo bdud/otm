@@ -23,7 +23,7 @@ extension ParseClient {
     }
 
     struct StudentLocationKeys {
-        static let ObjectId = "objectid"
+        static let ObjectId = "objectId"
         static let UniqueKey = "uniqueKey"
         static let FirstName = "firstName"
         static let LastName = "lastName"
@@ -31,5 +31,10 @@ extension ParseClient {
         static let MediaUrl = "mediaURL"
         static let Latitude = "latitude"
         static let Longitude = "longitude"
+    }
+
+    struct Errors {
+        static let Network = "Network Error. Please check your network connection and try again."
+        static let General = "Unable to complete operation."
     }
 }

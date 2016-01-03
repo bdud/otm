@@ -8,88 +8,89 @@
 
 import UIKit
 
-class TableViewController: UITableViewController {
+class TableViewController: UITableViewController, LocationCollectionViewController {
+
+    let CellReuseId = "CellReuseId"
+    var locations: [StudentLocation]?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        locations = ParseClient.sharedInstance().locations
     }
 
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        if let locations = locations {
+            return locations.count
+        }
+        else {
+            return 0
+        }
     }
 
-    /*
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier(CellReuseId, forIndexPath: indexPath)
 
-        // Configure the cell...
+        if let locations = locations {
+            let loc = locations[indexPath.row]
+            cell.textLabel?.text = "\(loc.firstName!) \(loc.lastName!)"
+            cell.imageView?.image = UIImage(named: "pin")
+        }
 
         return cell
     }
-    */
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if let locations = locations {
+            let location = locations[indexPath.row]
+            if let mediaUrlString = location.mediaUrl, url = NSURL(string: mediaUrlString) {
+                UIApplication.sharedApplication().openURL(url)
+            }
+        }
     }
-    */
 
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    // MARK: - LocationCollectionViewController
+
+    func refreshLocations(completion: (() -> Void)?) {
+        locations = ParseClient.sharedInstance().locations
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            self.tableView.reloadData()
+        }
+
+        if let completion = completion {
+            completion()
+        }
     }
-    */
 
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
+    func locationWasAdded(location: StudentLocation) {
+        refreshLocations(nil)
+        focusLocation(location)
     }
-    */
 
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
+    // MARK: - Misc
+
+
+    func moveToRow(rowNumber: Int) {
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            self.tableView.selectRowAtIndexPath(NSIndexPath(forRow: rowNumber, inSection: 0), animated: true, scrollPosition: .Middle)
+        }
     }
-    */
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func focusLocation(location: StudentLocation) {
+        if let uniqueKey = location.uniqueKey, locations = locations {
+            if let index = locations.indexOf({ (location: StudentLocation) -> Bool in
+                return location.uniqueKey == uniqueKey
+            }) {
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    self.moveToRow(index)
+                })
+            }
+        }
     }
-    */
 
 }

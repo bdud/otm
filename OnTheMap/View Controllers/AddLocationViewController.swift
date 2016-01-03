@@ -39,16 +39,22 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate {
             showErrorMessage("You must enter a location")
             return
         }
-        self.findButton.enabled = false
+        findButton.enabled = false
+        locationTextField.resignFirstResponder()
+        locationTextField.enabled = false
+
         findEnteredLocation { (success, placemark) -> Void in
             guard success, let coordinate = placemark?.location?.coordinate else {
                 self.showErrorMessage("No matching location was found.")
                 dispatch_async(dispatch_get_main_queue()) {
                     self.findButton.enabled = true
+                    self.locationTextField.enabled = true
+                    self.locationTextField.becomeFirstResponder()
                 }
                 return
             }
 
+            self.linkTextField.becomeFirstResponder()
             dispatch_async(dispatch_get_main_queue()) {
                 self.showMapWithPinAtCoordinate(coordinate)
                 self.findButton.enabled = true
@@ -61,14 +67,14 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate {
             showErrorMessage("Please enter a link.")
             return
         }
+        linkTextField.resignFirstResponder()
+        linkTextField.enabled = false
 
         var location = StudentLocation()
         let config = UdacityConfig.sharedUdacityConfig()
         location.firstName = config.FirstName
         location.lastName = config.LastName
-        if let accountKey = config.AccountKey {
-            location.uniqueKey = Int(accountKey)
-        }
+        location.uniqueKey = config.AccountKey
         location.mapString = locationTextField.text
         location.mediaUrl = linkText
         location.latitude = mapView.annotations[0].coordinate.latitude
@@ -88,6 +94,7 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate {
 
     override func viewWillAppear(animated: Bool) {
         styleControls()
+        locationTextField.becomeFirstResponder()
     }
 
     // MARK: UITextFieldDelegate

@@ -19,8 +19,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, LocationCollection
 
     // MARK: UIViewController
 
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidLoad() {
+        super.viewDidLoad()
         mapView.delegate = self
         self.refreshLocations(nil)
     }
@@ -29,14 +29,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, LocationCollection
     // MARK: Instance
 
     func makePin(location: StudentLocation) -> MKPointAnnotation? {
-        guard let latdbl = location.latitude else {
+        guard let coord = location.coordinate2D() else {
             return nil
         }
-
         let pin = MKPointAnnotation()
-        let lat = CLLocationDegrees(latdbl)
-        let lon = CLLocationDegrees(location.longitude!)
-        let coord = CLLocationCoordinate2D(latitude: lat, longitude: lon)
         pin.coordinate = coord
         pin.title = "\(location.firstName!) \(location.lastName!)"
         pin.subtitle = "\(location.mediaUrl!)"
@@ -59,10 +55,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, LocationCollection
     }
 
     func showError(error: String) {
-        let alertController = UIAlertController(title: "Error", message: error, preferredStyle: .Alert)
-        let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
-        alertController.addAction(okButton)
-        presentViewController(alertController, animated: true, completion: nil)
+        Alert.sharedInstance().ok(error, owner: self, completion: nil)
     }
 
 
@@ -121,9 +114,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, LocationCollection
         }
     }
 
-    func addLocation(location: StudentLocation) {
-        if let pin = makePin(location) {
-            mapView.addAnnotation(pin)
+    func locationWasAdded(location: StudentLocation) {
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            self.refreshLocations({ () -> Void in
+                if let coord = location.coordinate2D() {
+                    self.mapView.setCenterCoordinate(coord, animated: true)
+                }
+            })
         }
     }
 

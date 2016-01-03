@@ -32,17 +32,17 @@ class ClientConvenience {
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithRequest(request) { (data, response, error) -> Void in
             guard error == nil else {
-                handler(success: false, httpStatusCode: nil, errorMessage: error?.localizedDescription, responseData: nil)
+                handler(success: false, httpStatusCode: nil, errorMessage: error?.localizedDescription, responseData: data)
                 return
             }
 
             guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
                 if let response = response as? NSHTTPURLResponse {
-                    handler(success: false, httpStatusCode: response.statusCode, errorMessage: "Invalid response. Status code: \(response.statusCode)", responseData: nil)
+                    handler(success: false, httpStatusCode: response.statusCode, errorMessage: "Invalid response. Status code: \(response.statusCode)", responseData: data)
                 } else if let response = response {
-                    handler(success: false, httpStatusCode: nil, errorMessage: "No HTTP URL response received. Actual response: \(response)", responseData: nil)
+                    handler(success: false, httpStatusCode: nil, errorMessage: "No HTTP URL response received. Actual response: \(response)", responseData: data)
                 } else {
-                    handler(success: false, httpStatusCode: nil, errorMessage: "No response received", responseData: nil)
+                    handler(success: false, httpStatusCode: nil, errorMessage: "No response received", responseData: data)
                 }
                 return
             }
