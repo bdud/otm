@@ -25,11 +25,11 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate {
     // MARK: Outlets
     @IBOutlet weak var topLabel: UILabel!
     @IBOutlet weak var findButton: UIButton!
-    @IBOutlet weak var locationTextField: VNudgeTextField!
+    @IBOutlet weak var locationTextField: NudgeTextField!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var bottomContainer: UIView!
     @IBOutlet weak var submitButton: UIButton!
-    @IBOutlet weak var linkTextField: VNudgeTextField!
+    @IBOutlet weak var linkTextField: NudgeTextField!
 
     // MARK: Actions
 
@@ -127,8 +127,8 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate {
         locationLabelAttrString.appendAttributedString(NSAttributedString(string: "studying", attributes: [NSForegroundColorAttributeName: UIColor(red:0.15, green:0.18, blue:0.23, alpha:1), NSFontAttributeName: boldFont]))
         locationLabelAttrString.appendAttributedString(NSAttributedString(string: "\ntoday?", attributes: [NSForegroundColorAttributeName: lighterLabelColor]))
         topLabel.attributedText = locationLabelAttrString
-        locationTextField.nudgeFactor = 0.2
-        linkTextField.nudgeFactor = 0.45
+        locationTextField.nudgeFactorV = 0.2
+        linkTextField.nudgeFactorV = 0.45
 
         locationTextField.attributedPlaceholder = NSAttributedString(string: LocationPlaceholderText, attributes: [NSForegroundColorAttributeName: PlaceholderForegroundColor])
         linkTextField.attributedPlaceholder = NSAttributedString(string: LinkPlaceholderText, attributes: [NSForegroundColorAttributeName: PlaceholderForegroundColor])

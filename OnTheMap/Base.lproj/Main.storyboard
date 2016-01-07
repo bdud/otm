@@ -33,30 +33,53 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="bill@billdawson.com" borderStyle="roundedRect" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fZZ-4H-MJq">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Email" textAlignment="natural" minimumFontSize="14" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="fZZ-4H-MJq" customClass="NudgeTextField" customModule="OnTheMap" customModuleProvider="target">
                                 <rect key="frame" x="20" y="264" width="560" height="30"/>
+                                <color key="backgroundColor" red="1" green="0.77647058823529413" blue="0.57647058823529407" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="2ys-I4-69Y"/>
                                 </constraints>
+                                <color key="textColor" red="0.95686274510000002" green="0.33333333329999998" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress"/>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="[jieTGW6ftorC2" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="92i-3N-xYB">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="92i-3N-xYB" customClass="NudgeTextField" customModule="OnTheMap" customModuleProvider="target">
                                 <rect key="frame" x="20" y="302" width="560" height="30"/>
+                                <color key="backgroundColor" red="1" green="0.77647058820000003" blue="0.57647058819999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="x8Q-XI-XzI"/>
                                 </constraints>
+                                <color key="textColor" red="0.95686274510000002" green="0.33333333329999998" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wtU-FE-Una">
                                 <rect key="frame" x="20" y="340" width="560" height="30"/>
+                                <color key="backgroundColor" red="0.95686274509803915" green="0.33333333333333331" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="Oys-CW-cEN"/>
                                 </constraints>
-                                <state key="normal" title="Login"/>
+                                <state key="normal" title="Login">
+                                    <color key="titleColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </state>
+                                <state key="disabled">
+                                    <color key="titleColor" red="1" green="0.77647058823529413" blue="0.57647058823529407" alpha="0.5" colorSpace="calibratedRGB"/>
+                                </state>
                                 <connections>
                                     <action selector="loginTouchUp:" destination="ter-Hk-dkt" eventType="touchUpInside" id="zsX-sk-cGC"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8tI-KI-Jf3">
+                                <rect key="frame" x="20" y="378" width="560" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Yg5-pF-X0a"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <state key="normal" title="Don't have an account? Sign Up">
+                                    <color key="titleColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </state>
+                                <connections>
+                                    <action selector="signupTouchUp:" destination="ter-Hk-dkt" eventType="touchUpInside" id="6Q7-E2-bnT"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -65,20 +88,24 @@
                             <constraint firstItem="fZZ-4H-MJq" firstAttribute="top" secondItem="Z7E-5T-wO9" secondAttribute="bottom" constant="22" id="Aeh-YV-h1d"/>
                             <constraint firstAttribute="trailingMargin" secondItem="wtU-FE-Una" secondAttribute="trailing" id="F7t-g6-IQ5"/>
                             <constraint firstItem="92i-3N-xYB" firstAttribute="top" secondItem="fZZ-4H-MJq" secondAttribute="bottom" constant="8" id="FWy-In-SL9"/>
+                            <constraint firstItem="8tI-KI-Jf3" firstAttribute="trailing" secondItem="8db-X3-Htw" secondAttribute="trailingMargin" id="Imw-OH-hhC"/>
                             <constraint firstAttribute="trailingMargin" secondItem="fZZ-4H-MJq" secondAttribute="trailing" id="Kz7-UN-BW1"/>
                             <constraint firstItem="Z7E-5T-wO9" firstAttribute="centerX" secondItem="8db-X3-Htw" secondAttribute="centerX" id="PgO-s8-tOc"/>
+                            <constraint firstItem="8tI-KI-Jf3" firstAttribute="top" secondItem="wtU-FE-Una" secondAttribute="bottom" constant="8" id="ZoV-nd-igm"/>
                             <constraint firstAttribute="leadingMargin" secondItem="wtU-FE-Una" secondAttribute="leading" id="cFx-Cf-Utu"/>
                             <constraint firstItem="09w-tA-PLw" firstAttribute="top" secondItem="ia4-mM-Er8" secondAttribute="bottom" constant="18" id="cbc-G1-fRc"/>
                             <constraint firstItem="wtU-FE-Una" firstAttribute="top" secondItem="92i-3N-xYB" secondAttribute="bottom" constant="8" id="gzh-CZ-FnS"/>
                             <constraint firstItem="Z7E-5T-wO9" firstAttribute="top" secondItem="09w-tA-PLw" secondAttribute="bottom" constant="8" id="hch-ah-2jk"/>
                             <constraint firstAttribute="leadingMargin" secondItem="92i-3N-xYB" secondAttribute="leading" id="jIb-Jd-O0b"/>
                             <constraint firstAttribute="leadingMargin" secondItem="fZZ-4H-MJq" secondAttribute="leading" id="pwZ-cr-rKa"/>
+                            <constraint firstItem="8tI-KI-Jf3" firstAttribute="leading" secondItem="8db-X3-Htw" secondAttribute="leadingMargin" id="vNP-yr-L9c"/>
                             <constraint firstAttribute="trailingMargin" secondItem="92i-3N-xYB" secondAttribute="trailing" id="vjk-j2-3AF"/>
                             <constraint firstItem="09w-tA-PLw" firstAttribute="centerX" secondItem="8db-X3-Htw" secondAttribute="centerX" id="ys1-4R-CRr"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="emailField" destination="fZZ-4H-MJq" id="iFB-Qq-Rz1"/>
+                        <outlet property="loginButton" destination="wtU-FE-Una" id="W7T-Hg-Tww"/>
                         <outlet property="passwordField" destination="92i-3N-xYB" id="Z8c-GF-ToX"/>
                         <segue destination="Vfb-e5-vFo" kind="show" identifier="ToTabBar" id="4s3-SM-yKR"/>
                     </connections>
@@ -144,7 +171,7 @@
                                 <color key="textColor" red="0.53725490200000003" green="0.61568627450000002" blue="0.69019607839999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" placeholder="Enter Your Location Here" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Txc-Vc-cmu" customClass="VNudgeTextField" customModule="OnTheMap" customModuleProvider="target">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" placeholder="Enter Your Location Here" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Txc-Vc-cmu" customClass="NudgeTextField">
                                 <rect key="frame" x="0.0" y="222" width="600" height="300"/>
                                 <color key="backgroundColor" red="0.30980392159999998" green="0.53333333329999999" blue="0.71372549019999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -193,7 +220,7 @@
                                     <action selector="submitTap:" destination="ULP-TD-A18" eventType="touchUpInside" id="XFA-zH-vQ2"/>
                                 </connections>
                             </button>
-                            <textField hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" placeholder="Enter a Link to Share Here" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fM1-ev-0bO" customClass="VNudgeTextField" customModule="OnTheMap" customModuleProvider="target">
+                            <textField hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" placeholder="Enter a Link to Share Here" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fM1-ev-0bO" customClass="NudgeTextField">
                                 <rect key="frame" x="0.0" y="64" width="600" height="158"/>
                                 <color key="backgroundColor" red="0.31764705879999999" green="0.4941176471" blue="0.66666666669999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -302,7 +329,7 @@
                                 <rect key="frame" x="0.0" y="92" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jzE-HQ-6aw" id="3Mv-9P-5h4">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>

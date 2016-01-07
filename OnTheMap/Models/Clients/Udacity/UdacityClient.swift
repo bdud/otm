@@ -172,7 +172,7 @@ class UdacityClient {
         if let cookies = NSHTTPCookieStorage.sharedHTTPCookieStorage().cookies {
             for cookie in cookies {
                 if cookie.name == "XSRF-TOKEN" {
-                    req.setValue(cookie.value, forKey: "X-XSRF-TOKEN")
+                    req.setValue(cookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
                     break
                 }
             }

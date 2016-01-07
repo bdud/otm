@@ -8,32 +8,55 @@
 
 import UIKit
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UITextFieldDelegate {
 
     let tabBarSegueId = "ToTabBar"
+    let textFieldHNudge : CGFloat = 0.03
+    let emailPlaceholderText = "Email"
+    let passwordPlaceholderText = "Password"
+    let signupUrl = NSURL(string: "https://www.udacity.com/account/auth#!/signup")!
+    var tapRecognizer : UIGestureRecognizer?
+
+    var keyboardUp : Bool = false
+
 
     // MARK: - Outlets
 
-    @IBOutlet weak var emailField: UITextField!
-    @IBOutlet weak var passwordField: UITextField!
+    @IBOutlet weak var emailField: NudgeTextField!
+    @IBOutlet weak var passwordField: NudgeTextField!
+    @IBOutlet weak var loginButton: UIButton!
 
+    // MARK: - UIViewController
 
-    // MARK: - Overrides
+    override func viewDidLoad() {
+        tapRecognizer = UITapGestureRecognizer(target: self, action: "tapWasRecognized:")
+        tapRecognizer!.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapRecognizer!)
+        passwordField.delegate = self
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        passwordField.text = ""
+        styleControls()
+    }
 
     override func viewDidAppear(animated: Bool) {
-        let config = UdacityConfig.sharedUdacityConfig()
-        if let _ = config.SessionId, sessionExpiration = config.SessionExpiration {
-            if sessionExpiration.laterDate(NSDate()).isEqualToDate(sessionExpiration) {
-                performSegueWithIdentifier(tabBarSegueId, sender: self)
-                return
-            }
+        super.viewDidAppear(animated)
+        if sessionAlreadyAvailable() {
+            performSegueWithIdentifier(tabBarSegueId, sender: self)
         }
+    }
+
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
     }
 
     // MARK: - Other
 
     func showLoginAlert(message: String) {
         dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            self.loginButton.enabled = true
             let controller = UIAlertController(title: "Login Failure", message: message, preferredStyle: UIAlertControllerStyle.Alert)
             let action = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
             controller.addAction(action)
@@ -41,9 +64,35 @@ class LoginViewController: UIViewController {
         }
     }
 
+    func styleControls() {
+        emailField.nudgeFactorH = textFieldHNudge
+        passwordField.nudgeFactorH = textFieldHNudge
+        emailField.attributedPlaceholder = NSAttributedString(string: emailPlaceholderText, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
+        passwordField.attributedPlaceholder = NSAttributedString(string: passwordPlaceholderText, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
+
+    }
+
+    func sessionAlreadyAvailable() -> Bool {
+        let config = UdacityConfig.sharedUdacityConfig()
+        if let _ = config.SessionId, sessionExpiration = config.SessionExpiration {
+            if sessionExpiration.laterDate(NSDate()).isEqualToDate(sessionExpiration) {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    func tapWasRecognized(sender: UITapGestureRecognizer) {
+        if sender.state == .Ended {
+            view.endEditing(true)
+        }
+    }
+
     // MARK: - Actions
 
     @IBAction func loginTouchUp(sender: AnyObject) {
+        loginButton.enabled = false
         UdacityClient.sharedInstance().authenticate(emailField.text!, password: passwordField.text!) { (success, errorString) -> Void in
             if (success) {
                 UdacityClient.sharedInstance().fetchUserInfo({ (success, errorString) -> Void in
@@ -59,6 +108,7 @@ class LoginViewController: UIViewController {
                         return
                     }
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        self.loginButton.enabled = true
                         self.performSegueWithIdentifier(self.tabBarSegueId, sender: self)
                     })
 
@@ -74,4 +124,21 @@ class LoginViewController: UIViewController {
             }
         }
     }
+
+    @IBAction func signupTouchUp(sender: AnyObject) {
+        UIApplication.sharedApplication().openURL(signupUrl)
+    }
+
+
+    // MARK: - UITextFieldDelegate
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        if textField == passwordField && textField.hasText() && emailField.hasText() {
+            textField.resignFirstResponder()
+            loginTouchUp(self)
+            return false
+        }
+        return true
+    }
+
+
 }

@@ -23,7 +23,7 @@
 		A93B8BB21C216F8A003528F5 /* AddLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B8BB11C216F8A003528F5 /* AddLocationViewController.swift */; };
 		A93C47C91C230E6800B7BD5F /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A93C47C81C230E6800B7BD5F /* CoreLocation.framework */; };
 		A943BAFD1C2C031600A46B94 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = A943BAFC1C2C031600A46B94 /* Alert.swift */; };
-		A943BAFF1C39C42500A46B94 /* VNudgeTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A943BAFE1C39C42500A46B94 /* VNudgeTextField.swift */; };
+		A943BAFF1C39C42500A46B94 /* NudgeTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A943BAFE1C39C42500A46B94 /* NudgeTextField.swift */; };
 		A996F34B1BE26AA900977E23 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A996F34A1BE26AA900977E23 /* AppDelegate.swift */; };
 		A996F3501BE26AA900977E23 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A996F34E1BE26AA900977E23 /* Main.storyboard */; };
 		A996F3521BE26AA900977E23 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A996F3511BE26AA900977E23 /* Assets.xcassets */; };
@@ -50,7 +50,7 @@
 		A93B8BB11C216F8A003528F5 /* AddLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddLocationViewController.swift; path = "View Controllers/AddLocationViewController.swift"; sourceTree = "<group>"; };
 		A93C47C81C230E6800B7BD5F /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		A943BAFC1C2C031600A46B94 /* Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Alert.swift; path = Util/Alert.swift; sourceTree = "<group>"; };
-		A943BAFE1C39C42500A46B94 /* VNudgeTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VNudgeTextField.swift; path = "View Controllers/VNudgeTextField.swift"; sourceTree = "<group>"; };
+		A943BAFE1C39C42500A46B94 /* NudgeTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NudgeTextField.swift; path = "View Controllers/NudgeTextField.swift"; sourceTree = "<group>"; };
 		A996F3471BE26AA900977E23 /* OnTheMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A996F34A1BE26AA900977E23 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A996F34F1BE26AA900977E23 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -93,7 +93,7 @@
 				A90B08E81BF1774300CBD70A /* TableViewController.swift */,
 				A93B8BAF1C21690D003528F5 /* LocationCollectionViewController.swift */,
 				A93B8BB11C216F8A003528F5 /* AddLocationViewController.swift */,
-				A943BAFE1C39C42500A46B94 /* VNudgeTextField.swift */,
+				A943BAFE1C39C42500A46B94 /* NudgeTextField.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -273,7 +273,7 @@
 				A9E4AD271C19DB660024F923 /* TabBarController.swift in Sources */,
 				A90B08E71BF1770D00CBD70A /* MapViewController.swift in Sources */,
 				A996F34B1BE26AA900977E23 /* AppDelegate.swift in Sources */,
-				A943BAFF1C39C42500A46B94 /* VNudgeTextField.swift in Sources */,
+				A943BAFF1C39C42500A46B94 /* NudgeTextField.swift in Sources */,
 				A93B8BB21C216F8A003528F5 /* AddLocationViewController.swift in Sources */,
 				A93B8B8A1C1EEB40003528F5 /* ParseClient.swift in Sources */,
 				A93B8BB01C21690D003528F5 /* LocationCollectionViewController.swift in Sources */,
