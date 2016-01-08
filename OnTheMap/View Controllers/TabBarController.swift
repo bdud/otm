@@ -76,7 +76,9 @@ class TabBarController: UITabBarController, AddLocationViewControllerDelegate {
     }
 
     // MARK: - UIViewController
-    override func viewDidLoad() {
+
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
         guard let _ = UdacityConfig.sharedUdacityConfig().AccountKey else {
             // One time user info fetch
             fetchUserInfo()

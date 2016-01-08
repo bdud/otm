@@ -37,8 +37,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
         view.addGestureRecognizer(tapRecognizer!)
         passwordField.delegate = self
         facebookButton.delegate = self
-
-//        addFacebookButton()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -82,23 +80,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
         if sender.state == .Ended {
             view.endEditing(true)
         }
-    }
-
-    func addFacebookButton() {
-        let margins = view.layoutMarginsGuide
-        facebookButton = FBSDKLoginButton()
-
-        guard facebookButton != nil else {
-            print("Could not create a facebook button. Sweet Jesus")
-            return
-        }
-        facebookButton.translatesAutoresizingMaskIntoConstraints = false
-        facebookButton.delegate = self
-        view.addSubview(facebookButton)
-
-        facebookButton.leadingAnchor.constraintEqualToAnchor(margins.leadingAnchor).active = true
-        facebookButton.trailingAnchor.constraintEqualToAnchor(margins.trailingAnchor).active = true
-        NSLayoutConstraint(item: facebookButton, attribute: .Top, relatedBy: .Equal, toItem: signupButton, attribute: .Bottom, multiplier: 1, constant: 8).active = true
     }
 
     // MARK: - Login

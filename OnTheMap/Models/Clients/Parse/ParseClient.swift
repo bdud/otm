@@ -107,6 +107,9 @@ class ParseClient {
 
     func fetchLocations(completionHandler: (success: Bool, errorString: String?, data: [StudentLocation]?) -> Void) {
 
+        let req = prepareRequest()
+        let urlString = "\(req.URL!.absoluteString)?limit=100&order=updatedAt"
+        req.URL = NSURL(string: urlString)!
         ClientConvenience.sharedInstance().performDataTaskWithRequest(prepareRequest()) { (success, httpStatusCode, errorMessage, responseData) -> Void in
             guard success else {
                 if let errorMessage = errorMessage {

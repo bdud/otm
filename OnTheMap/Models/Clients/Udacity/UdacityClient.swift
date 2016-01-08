@@ -84,6 +84,7 @@ class UdacityClient {
             formatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
             let expDate = formatter.dateFromString(sessionExpiration)
             config.SessionExpiration = expDate
+            config.persist()
             
             completionHandler(success: true, errorString: nil)
         }
