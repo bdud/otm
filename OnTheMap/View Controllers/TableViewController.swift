@@ -39,6 +39,7 @@ class TableViewController: UITableViewController, LocationCollectionViewControll
         if let locations = locations {
             let loc = locations[indexPath.row]
             cell.textLabel?.text = "\(loc.firstName!) \(loc.lastName!)"
+            cell.detailTextLabel?.text = "\(loc.mediaUrl!)"
             cell.imageView?.image = UIImage(named: "pin")
         }
 

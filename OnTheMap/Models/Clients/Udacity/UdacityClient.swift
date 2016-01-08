@@ -10,16 +10,9 @@ import Foundation
 
 class UdacityClient {
 
-    func authenticate(emailAddress: String, password: String, completionHandler: (success: Bool, errorString: String?) -> Void) {
+    // MARK: - Sessions
 
-        let url = apiUrl(APIEndpoints.Session)
-        guard let request = ClientConvenience.sharedInstance().preparePostRequest(url,
-        jsonDataDictionary: [JSONKeys.Udacity: [JSONKeys.Username: emailAddress, JSONKeys.Password: password]]) else {
-                completionHandler(success: false, errorString: ErrorMessages.Connection)
-                return
-        }
-
-
+    func performAuthRequest(request: NSURLRequest, completionHandler: (success: Bool, errorString: String?) -> Void) {
         performDataTaskWithRequest(request) { (success, httpStatusCode, errorMessage, jsonData) -> Void in
             guard success else {
                 guard let httpStatusCode = httpStatusCode else {
@@ -91,11 +84,64 @@ class UdacityClient {
             formatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
             let expDate = formatter.dateFromString(sessionExpiration)
             config.SessionExpiration = expDate
-
+            
             completionHandler(success: true, errorString: nil)
         }
+    }
+
+    func authenticateFB(token: String, completionHandler: (success: Bool, errorString: String?) -> Void) {
+        let url = apiUrl(APIEndpoints.Session)
+        guard let request = ClientConvenience.sharedInstance().preparePostRequest(url,
+            jsonDataDictionary: [JSONKeys.Facebook: [JSONKeys.AccessToken: token]])  else {
+                completionHandler(success: false, errorString: ErrorMessages.Connection)
+                return
+        }
+        performAuthRequest(request, completionHandler: completionHandler)
 
     }
+
+    func authenticate(emailAddress: String, password: String, completionHandler: (success: Bool, errorString: String?) -> Void) {
+
+        let url = apiUrl(APIEndpoints.Session)
+        guard let request = ClientConvenience.sharedInstance().preparePostRequest(url,
+        jsonDataDictionary: [JSONKeys.Udacity: [JSONKeys.Username: emailAddress, JSONKeys.Password: password]]) else {
+                completionHandler(success: false, errorString: ErrorMessages.Connection)
+                return
+        }
+        performAuthRequest(request, completionHandler: completionHandler)
+    }
+
+    func deleteSession() {
+        UdacityConfig.sharedUdacityConfig().clear()
+
+        // Be a good citizen and clear the session up at the server.
+        let url = apiUrl(APIEndpoints.Session)
+        let req = NSMutableURLRequest(URL: url)
+        req.HTTPMethod = "DELETE"
+
+        if let cookies = NSHTTPCookieStorage.sharedHTTPCookieStorage().cookies {
+            for cookie in cookies {
+                if cookie.name == "XSRF-TOKEN" {
+                    req.setValue(cookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
+                    break
+                }
+            }
+        }
+
+        performDataTaskWithRequest(req) { (success, httpStatusCode, errorMessage, jsonData) -> Void in
+            if !success {
+                if let msg = errorMessage {
+                    print("Failed to delete session: \(msg)")
+                }
+                else {
+                    print("Failed to delete session. No error message.")
+                }
+                return
+            }
+        }
+    }
+
+    // MARK: - User Info
 
     func fetchUserInfo(completionHandler: (success: Bool, errorString: String?) -> Void) {
 
@@ -161,35 +207,6 @@ class UdacityClient {
         
     }
 
-    func deleteSession() {
-        UdacityConfig.sharedUdacityConfig().clear()
-
-        // Be a good citizen and clear the session up at the server.
-        let url = apiUrl(APIEndpoints.Session)
-        let req = NSMutableURLRequest(URL: url)
-        req.HTTPMethod = "DELETE"
-
-        if let cookies = NSHTTPCookieStorage.sharedHTTPCookieStorage().cookies {
-            for cookie in cookies {
-                if cookie.name == "XSRF-TOKEN" {
-                    req.setValue(cookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
-                    break
-                }
-            }
-        }
-
-        performDataTaskWithRequest(req) { (success, httpStatusCode, errorMessage, jsonData) -> Void in
-            if success {
-                print("Session delete success")
-            }
-            else if let msg = errorMessage {
-                print("Failed to delete session: \(msg)")
-            }
-            else {
-                print("Failed to delete session. No error message.")
-            }
-        }
-    }
 
     // MARK: Shared Instance
 

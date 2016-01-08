@@ -82,10 +82,14 @@
                                     <action selector="signupTouchUp:" destination="ter-Hk-dkt" eventType="touchUpInside" id="6Q7-E2-bnT"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tif-iY-pJY" customClass="FBSDKLoginButton">
+                                <rect key="frame" x="20" y="416" width="560" height="34"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.99215686274509807" green="0.48627450980392156" blue="0.050980392156862744" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="fZZ-4H-MJq" firstAttribute="top" secondItem="Z7E-5T-wO9" secondAttribute="bottom" constant="22" id="Aeh-YV-h1d"/>
+                            <constraint firstItem="tif-iY-pJY" firstAttribute="leading" secondItem="8db-X3-Htw" secondAttribute="leadingMargin" id="B3B-0e-nf7"/>
                             <constraint firstAttribute="trailingMargin" secondItem="wtU-FE-Una" secondAttribute="trailing" id="F7t-g6-IQ5"/>
                             <constraint firstItem="92i-3N-xYB" firstAttribute="top" secondItem="fZZ-4H-MJq" secondAttribute="bottom" constant="8" id="FWy-In-SL9"/>
                             <constraint firstItem="8tI-KI-Jf3" firstAttribute="trailing" secondItem="8db-X3-Htw" secondAttribute="trailingMargin" id="Imw-OH-hhC"/>
@@ -97,16 +101,20 @@
                             <constraint firstItem="wtU-FE-Una" firstAttribute="top" secondItem="92i-3N-xYB" secondAttribute="bottom" constant="8" id="gzh-CZ-FnS"/>
                             <constraint firstItem="Z7E-5T-wO9" firstAttribute="top" secondItem="09w-tA-PLw" secondAttribute="bottom" constant="8" id="hch-ah-2jk"/>
                             <constraint firstAttribute="leadingMargin" secondItem="92i-3N-xYB" secondAttribute="leading" id="jIb-Jd-O0b"/>
+                            <constraint firstItem="tif-iY-pJY" firstAttribute="trailing" secondItem="8db-X3-Htw" secondAttribute="trailingMargin" id="k3g-Qm-gzh"/>
                             <constraint firstAttribute="leadingMargin" secondItem="fZZ-4H-MJq" secondAttribute="leading" id="pwZ-cr-rKa"/>
                             <constraint firstItem="8tI-KI-Jf3" firstAttribute="leading" secondItem="8db-X3-Htw" secondAttribute="leadingMargin" id="vNP-yr-L9c"/>
                             <constraint firstAttribute="trailingMargin" secondItem="92i-3N-xYB" secondAttribute="trailing" id="vjk-j2-3AF"/>
+                            <constraint firstItem="tif-iY-pJY" firstAttribute="top" secondItem="8tI-KI-Jf3" secondAttribute="bottom" constant="8" id="wbZ-lU-hTs"/>
                             <constraint firstItem="09w-tA-PLw" firstAttribute="centerX" secondItem="8db-X3-Htw" secondAttribute="centerX" id="ys1-4R-CRr"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="emailField" destination="fZZ-4H-MJq" id="iFB-Qq-Rz1"/>
+                        <outlet property="facebookButton" destination="tif-iY-pJY" id="xjm-1c-2MN"/>
                         <outlet property="loginButton" destination="wtU-FE-Una" id="W7T-Hg-Tww"/>
                         <outlet property="passwordField" destination="92i-3N-xYB" id="Z8c-GF-ToX"/>
+                        <outlet property="signupButton" destination="8tI-KI-Jf3" id="j21-6c-DCN"/>
                         <segue destination="Vfb-e5-vFo" kind="show" identifier="ToTabBar" id="4s3-SM-yKR"/>
                     </connections>
                 </viewController>
@@ -130,7 +138,7 @@
                                     <action selector="refreshTap:" destination="4RR-LD-2oP" id="gks-eh-n3e"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem image="pin" id="hel-ZL-rws">
+                            <barButtonItem image="pin" style="done" id="hel-ZL-rws">
                                 <connections>
                                     <action selector="addButtonTap:" destination="4RR-LD-2oP" id="kxW-tW-WsO"/>
                                 </connections>
@@ -143,6 +151,7 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
+                        <outlet property="addButton" destination="hel-ZL-rws" id="Xb0-i4-doQ"/>
                         <outlet property="refreshButton" destination="QmU-Pm-Qc4" id="1cv-K0-sd1"/>
                         <segue destination="r30-Xq-zC6" kind="relationship" relationship="viewControllers" id="Wjx-Qb-4x1"/>
                         <segue destination="w2U-9L-qjj" kind="relationship" relationship="viewControllers" id="bue-FM-KdW"/>
@@ -171,7 +180,7 @@
                                 <color key="textColor" red="0.53725490200000003" green="0.61568627450000002" blue="0.69019607839999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" placeholder="Enter Your Location Here" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Txc-Vc-cmu" customClass="NudgeTextField">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" placeholder="Enter Your Location Here" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Txc-Vc-cmu" customClass="NudgeTextField" customModule="OnTheMap" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="222" width="600" height="300"/>
                                 <color key="backgroundColor" red="0.30980392159999998" green="0.53333333329999999" blue="0.71372549019999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -220,7 +229,7 @@
                                     <action selector="submitTap:" destination="ULP-TD-A18" eventType="touchUpInside" id="XFA-zH-vQ2"/>
                                 </connections>
                             </button>
-                            <textField hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" placeholder="Enter a Link to Share Here" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fM1-ev-0bO" customClass="NudgeTextField">
+                            <textField hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" placeholder="Enter a Link to Share Here" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fM1-ev-0bO" customClass="NudgeTextField" customModule="OnTheMap" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="64" width="600" height="158"/>
                                 <color key="backgroundColor" red="0.31764705879999999" green="0.4941176471" blue="0.66666666669999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -325,13 +334,30 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CellReuseId" id="jzE-HQ-6aw">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CellReuseId" textLabel="KNE-x5-V4O" detailTextLabel="Sll-JL-WJR" style="IBUITableViewCellStyleSubtitle" id="jzE-HQ-6aw">
                                 <rect key="frame" x="0.0" y="92" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jzE-HQ-6aw" id="3Mv-9P-5h4">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="KNE-x5-V4O">
+                                            <rect key="frame" x="15" y="5" width="35" height="20"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Sll-JL-WJR">
+                                            <rect key="frame" x="15" y="25" width="41" height="14"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
                                 </tableViewCellContentView>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                             </tableViewCell>
                         </prototypes>
                         <connections>

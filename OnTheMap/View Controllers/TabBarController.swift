@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FBSDKLoginKit
 
 class TabBarController: UITabBarController, AddLocationViewControllerDelegate {
     let addLocationStoryboardID = "addLocationView"
@@ -15,13 +16,14 @@ class TabBarController: UITabBarController, AddLocationViewControllerDelegate {
 
     @IBOutlet weak var refreshButton: UIBarButtonItem!
     @IBOutlet weak var trashButton: UIBarButtonItem!
-
+    @IBOutlet weak var addButton: UIBarButtonItem!
 
     // MARK: Actions
 
     @IBAction func logoutButtonTap(sender: AnyObject) {
         
         UdacityClient.sharedInstance().deleteSession()
+        FBSDKAccessToken.setCurrentAccessToken(nil)
         dismissViewControllerAnimated(true, completion: nil)
     }
 
@@ -73,6 +75,14 @@ class TabBarController: UITabBarController, AddLocationViewControllerDelegate {
         }
     }
 
+    // MARK: - UIViewController
+    override func viewDidLoad() {
+        guard let _ = UdacityConfig.sharedUdacityConfig().AccountKey else {
+            // One time user info fetch
+            fetchUserInfo()
+            return
+        }
+    }
 
     // MARK: AddLocationViewControllerDelegate
 
@@ -88,14 +98,17 @@ class TabBarController: UITabBarController, AddLocationViewControllerDelegate {
                 self.showError(msg)
                 return
             }
-            if let selectedController = self.selectedViewController as? LocationCollectionViewController  {
-                selectedController.locationWasAdded(location)
-            }
 
+            for controller in self.viewControllers! {
+                if let controller = controller as? LocationCollectionViewController {
+                    controller.locationWasAdded(location)
+                }
+
+            }
         }
     }
 
-    // MARK: Instance
+    // MARK: Miscellaneous
 
     func showAddLocationViewController() {
         guard let addVCNav = storyboard?.instantiateViewControllerWithIdentifier(addLocationStoryboardID) as? UINavigationController else {
@@ -114,6 +127,27 @@ class TabBarController: UITabBarController, AddLocationViewControllerDelegate {
     
     func showError(message: String) {
         Alert.sharedInstance().ok(message, owner: self, completion: nil)
+    }
+
+    func fetchUserInfo() {
+        addButton.enabled = false
+        UdacityClient.sharedInstance().fetchUserInfo({ (success, errorString) -> Void in
+            guard success else {
+                if let errorString = errorString {
+                    print(errorString)
+                    self.showError(errorString)
+                }
+                else {
+                    print("An unknown error occurred while attempting to fetch Udacity user info")
+                    self.showError(UdacityClient.ErrorMessages.Connection)
+                }
+                return
+            }
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.addButton.enabled = true
+            })
+        })
+
     }
 
 }

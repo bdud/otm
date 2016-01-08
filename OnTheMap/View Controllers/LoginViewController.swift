@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import FBSDKLoginKit
 
-class LoginViewController: UIViewController, UITextFieldDelegate {
+class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButtonDelegate {
 
     let tabBarSegueId = "ToTabBar"
     let textFieldHNudge : CGFloat = 0.03
@@ -25,6 +26,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var emailField: NudgeTextField!
     @IBOutlet weak var passwordField: NudgeTextField!
     @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var signupButton: UIButton!
+    @IBOutlet weak var facebookButton: FBSDKLoginButton!
 
     // MARK: - UIViewController
 
@@ -33,6 +36,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         tapRecognizer!.cancelsTouchesInView = false
         view.addGestureRecognizer(tapRecognizer!)
         passwordField.delegate = self
+        facebookButton.delegate = self
+
+//        addFacebookButton()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -54,22 +60,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
     // MARK: - Other
 
-    func showLoginAlert(message: String) {
-        dispatch_async(dispatch_get_main_queue()) { () -> Void in
-            self.loginButton.enabled = true
-            let controller = UIAlertController(title: "Login Failure", message: message, preferredStyle: UIAlertControllerStyle.Alert)
-            let action = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
-            controller.addAction(action)
-            self.presentViewController(controller, animated: true, completion: nil)
-        }
-    }
-
     func styleControls() {
         emailField.nudgeFactorH = textFieldHNudge
         passwordField.nudgeFactorH = textFieldHNudge
         emailField.attributedPlaceholder = NSAttributedString(string: emailPlaceholderText, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
         passwordField.attributedPlaceholder = NSAttributedString(string: passwordPlaceholderText, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor()])
-
     }
 
     func sessionAlreadyAvailable() -> Bool {
@@ -89,40 +84,81 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
     }
 
+    func addFacebookButton() {
+        let margins = view.layoutMarginsGuide
+        facebookButton = FBSDKLoginButton()
+
+        guard facebookButton != nil else {
+            print("Could not create a facebook button. Sweet Jesus")
+            return
+        }
+        facebookButton.translatesAutoresizingMaskIntoConstraints = false
+        facebookButton.delegate = self
+        view.addSubview(facebookButton)
+
+        facebookButton.leadingAnchor.constraintEqualToAnchor(margins.leadingAnchor).active = true
+        facebookButton.trailingAnchor.constraintEqualToAnchor(margins.trailingAnchor).active = true
+        NSLayoutConstraint(item: facebookButton, attribute: .Top, relatedBy: .Equal, toItem: signupButton, attribute: .Bottom, multiplier: 1, constant: 8).active = true
+    }
+
+    // MARK: - Login
+
+    func showLoginAlert(message: String) {
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            self.loginButton.enabled = true
+            let controller = UIAlertController(title: "Login Failure", message: message, preferredStyle: UIAlertControllerStyle.Alert)
+            let action = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
+            controller.addAction(action)
+            self.presentViewController(controller, animated: true, completion: nil)
+        }
+    }
+
+    func enableLoginButton(enable: Bool) {
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            self.loginButton.enabled = enable
+            self.facebookButton.enabled = enable
+        }
+    }
+
+    func performLogin(facebookToken: String?) {
+        enableLoginButton(false)
+
+        let callback = { (success: Bool, errorString: String?) -> Void in
+            self.enableLoginButton(true)
+            guard success else {
+                self.enableLoginButton(true)
+                if let errorString = errorString {
+                    print(errorString)
+                    self.showLoginAlert(errorString)
+                }
+                else {
+                    print("An unknown error occurred while attempting to authenticate with Udacity")
+                    self.showLoginAlert(UdacityClient.ErrorMessages.Connection)
+                }
+                return
+            }
+
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.performSegueWithIdentifier(self.tabBarSegueId, sender: self)
+            })
+
+        }
+
+        let client = UdacityClient.sharedInstance()
+
+        if let facebookToken = facebookToken {
+            client.authenticateFB(facebookToken, completionHandler: callback)
+        }
+        else {
+            client.authenticate(emailField.text!, password: passwordField.text!, completionHandler: callback)
+        }
+
+    }
+
     // MARK: - Actions
 
     @IBAction func loginTouchUp(sender: AnyObject) {
-        loginButton.enabled = false
-        UdacityClient.sharedInstance().authenticate(emailField.text!, password: passwordField.text!) { (success, errorString) -> Void in
-            if (success) {
-                UdacityClient.sharedInstance().fetchUserInfo({ (success, errorString) -> Void in
-                    guard success else {
-                        if let errorString = errorString {
-                            print(errorString)
-                            self.showLoginAlert(errorString)
-                        }
-                        else {
-                            print("An unknown error occurred while attempting to fetch Udacity user info")
-                            self.showLoginAlert(UdacityClient.ErrorMessages.Connection)
-                        }
-                        return
-                    }
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        self.loginButton.enabled = true
-                        self.performSegueWithIdentifier(self.tabBarSegueId, sender: self)
-                    })
-
-                })
-            }
-            else if let errorString = errorString {
-                print(errorString)
-                self.showLoginAlert(errorString)
-            }
-            else {
-                print("An unknown error occurred while attempting to authenticate with Udacity")
-                self.showLoginAlert(UdacityClient.ErrorMessages.Connection)
-            }
-        }
+        performLogin(nil)
     }
 
     @IBAction func signupTouchUp(sender: AnyObject) {
@@ -131,6 +167,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
 
     // MARK: - UITextFieldDelegate
+
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         if textField == passwordField && textField.hasText() && emailField.hasText() {
             textField.resignFirstResponder()
@@ -140,5 +177,28 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return true
     }
 
+    // MARK: - FBSDKLoginButtonDelegate
 
+    func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
+        if error != nil {
+            showLoginAlert(error.localizedDescription)
+            return
+        }
+
+        if result == nil {
+            showLoginAlert(UdacityClient.ErrorMessages.Connection)
+            return
+        }
+
+        if result.isCancelled {
+            return
+        }
+
+        self.performLogin(result.token.tokenString)
+    }
+    
+    func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
+        UdacityClient.sharedInstance().deleteSession()
+    }
+    
 }
