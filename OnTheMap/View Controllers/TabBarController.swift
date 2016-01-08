@@ -15,38 +15,51 @@ class TabBarController: UITabBarController, AddLocationViewControllerDelegate {
     // MARK: Outlets
 
     @IBOutlet weak var refreshButton: UIBarButtonItem!
-    @IBOutlet weak var trashButton: UIBarButtonItem!
     @IBOutlet weak var addButton: UIBarButtonItem!
 
     // MARK: Actions
 
     @IBAction func logoutButtonTap(sender: AnyObject) {
-        
+
         UdacityClient.sharedInstance().deleteSession()
         FBSDKAccessToken.setCurrentAccessToken(nil)
         dismissViewControllerAnimated(true, completion: nil)
     }
 
     @IBAction func addButtonTap(sender: AnyObject) {
-        if let accountKey = UdacityConfig.sharedUdacityConfig().AccountKey {
-            if ParseClient.sharedInstance().locationExistsWithUniqueKey(accountKey) {
+        guard let accountKey = UdacityConfig.sharedUdacityConfig().AccountKey else {
+            self.showError("Your Udacity account information has not been retrieved. Please logging in again.")
+            return
+        }
+
+        // Check for existing first
+        let parse = ParseClient.sharedInstance()
+        parse.fetchLocationWithUniqueKey(accountKey, completionHandler: { (location, errorMessage) -> Void in
+
+            if let errorMessage = errorMessage {
+                self.showError(errorMessage)
+                return
+            }
+
+            if let _ = location {
                 let avc = UIAlertController(title: nil, message: "You Have Already Posted a Student Location. Would You Like to Overwrite Your Current Location?", preferredStyle: .Alert)
                 let over = UIAlertAction(title: "Overwrite", style: .Destructive, handler: { (action) -> Void in
-                    self.showAddLocationViewController()
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        self.showAddLocationViewController()
+                    })
                 })
                 let cancel = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
                 avc.addAction(over)
                 avc.addAction(cancel)
-                self.presentViewController(avc, animated: true, completion: nil)
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    self.presentViewController(avc, animated: true, completion: nil)
+                })
+
             }
             else {
                 self.showAddLocationViewController()
             }
-        }
-        else {
-            self.showAddLocationViewController()
-        }
-
+        })
     }
 
     @IBAction func refreshTap(sender: AnyObject) {
@@ -61,20 +74,6 @@ class TabBarController: UITabBarController, AddLocationViewControllerDelegate {
     }
 
 
-    @IBAction func deleteLocationTap(sender: AnyObject) {
-        if let id = UdacityConfig.sharedUdacityConfig().AccountKey {
-            let parse = ParseClient.sharedInstance()
-            if !parse.locationExistsWithUniqueKey(id) {
-                return
-            }
-            ParseClient.sharedInstance().deleteLocationWithUniqueId(id, completionHandler: { (success, errorMessage) -> Void in
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.refreshTap(self)
-                })
-            })
-        }
-    }
-
     // MARK: - UIViewController
 
     override func viewDidAppear(animated: Bool) {
@@ -88,7 +87,7 @@ class TabBarController: UITabBarController, AddLocationViewControllerDelegate {
 
     // MARK: AddLocationViewControllerDelegate
 
-    func createdLocation(location: StudentLocation) {
+    func createdLocation(location: StudentInformation) {
         let parse = ParseClient.sharedInstance()
 
         parse.addLocation(location) { (success, errorString) -> Void in
@@ -118,15 +117,18 @@ class TabBarController: UITabBarController, AddLocationViewControllerDelegate {
             return
         }
 
-        presentViewController(addVCNav, animated: true) {
-            guard let addVC = addVCNav.topViewController as? AddLocationViewController else {
-                print("Unable to create AddLocationViewController")
-                return
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            self.presentViewController(addVCNav, animated: true) {
+                guard let addVC = addVCNav.topViewController as? AddLocationViewController else {
+                    print("Unable to create AddLocationViewController")
+                    return
+                }
+                addVC.delegate = self
             }
-            addVC.delegate = self
         }
+
     }
-    
+
     func showError(message: String) {
         Alert.sharedInstance().ok(message, owner: self, completion: nil)
     }
@@ -149,7 +151,7 @@ class TabBarController: UITabBarController, AddLocationViewControllerDelegate {
                 self.addButton.enabled = true
             })
         })
-
+        
     }
-
+    
 }

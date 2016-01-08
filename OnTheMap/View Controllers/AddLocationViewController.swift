@@ -11,7 +11,7 @@ import MapKit
 import CoreLocation
 
 protocol AddLocationViewControllerDelegate {
-    func createdLocation(location: StudentLocation)
+    func createdLocation(location: StudentInformation)
 }
 
 class AddLocationViewController: UIViewController, UITextFieldDelegate {
@@ -30,6 +30,7 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var bottomContainer: UIView!
     @IBOutlet weak var submitButton: UIButton!
     @IBOutlet weak var linkTextField: NudgeTextField!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
     // MARK: Actions
 
@@ -38,6 +39,9 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate {
     }
 
     @IBAction func findOnMapTap(sender: AnyObject) {
+        view.endEditing(true)
+        showActivityInProgress(true)
+
         let text = locationTextField.text!
         if text.characters.count == 0 || text == "Enter Your Location Here" {
             showErrorMessage("You must enter a location")
@@ -48,6 +52,7 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate {
         locationTextField.enabled = false
 
         findEnteredLocation { (success, placemark) -> Void in
+            self.showActivityInProgress(false)
             guard success, let coordinate = placemark?.location?.coordinate else {
                 self.showErrorMessage("No matching location was found.")
                 dispatch_async(dispatch_get_main_queue()) {
@@ -67,6 +72,7 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate {
     }
 
     @IBAction func submitTap(sender: AnyObject) {
+        view.endEditing(true)
         guard let linkText = linkTextField.text where linkText.characters.count > 0 else {
             showErrorMessage("Please enter a link.")
             return
@@ -74,7 +80,7 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate {
         linkTextField.resignFirstResponder()
         linkTextField.enabled = false
 
-        var location = StudentLocation()
+        var location = StudentInformation()
         let config = UdacityConfig.sharedUdacityConfig()
         location.firstName = config.FirstName
         location.lastName = config.LastName
@@ -195,6 +201,24 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate {
             let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
             av.addAction(action)
             self.presentViewController(av, animated: true, completion: nil)
+        }
+    }
+    
+    func showActivityInProgress(inProgress: Bool) {
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            let opacity : Float = inProgress ? 0.5 : 1.0
+            self.findButton.hidden = inProgress
+
+            if inProgress {
+                self.activityIndicator.startAnimating()
+            }
+            else {
+                self.activityIndicator.stopAnimating()
+            }
+
+            UIView.animateWithDuration(0.3, animations: { () -> Void in
+                self.view.layer.opacity = opacity
+            })
         }
     }
 }

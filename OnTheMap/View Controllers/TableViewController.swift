@@ -11,7 +11,7 @@ import UIKit
 class TableViewController: UITableViewController, LocationCollectionViewController {
 
     let CellReuseId = "CellReuseId"
-    var locations: [StudentLocation]?
+    var locations: [StudentInformation]?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,7 +68,7 @@ class TableViewController: UITableViewController, LocationCollectionViewControll
         }
     }
 
-    func locationWasAdded(location: StudentLocation) {
+    func locationWasAdded(location: StudentInformation) {
         refreshLocations(nil)
         focusLocation(location)
     }
@@ -82,9 +82,9 @@ class TableViewController: UITableViewController, LocationCollectionViewControll
         }
     }
 
-    func focusLocation(location: StudentLocation) {
+    func focusLocation(location: StudentInformation) {
         if let uniqueKey = location.uniqueKey, locations = locations {
-            if let index = locations.indexOf({ (location: StudentLocation) -> Bool in
+            if let index = locations.indexOf({ (location: StudentInformation) -> Bool in
                 return location.uniqueKey == uniqueKey
             }) {
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in

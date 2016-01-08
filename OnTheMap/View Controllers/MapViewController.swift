@@ -33,7 +33,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, LocationCollection
 
     // MARK: Instance
 
-    func makePin(location: StudentLocation) -> MKPointAnnotation? {
+    func makePin(location: StudentInformation) -> MKPointAnnotation? {
         guard let coord = location.coordinate2D() else {
             return nil
         }
@@ -45,7 +45,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, LocationCollection
 
     }
 
-    func dropPins(locations: [StudentLocation]) {
+    func dropPins(locations: [StudentInformation]) {
         var annotations = [MKAnnotation]()
         for loc in locations {
 
@@ -119,7 +119,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, LocationCollection
         }
     }
 
-    func locationWasAdded(location: StudentLocation) {
+    func locationWasAdded(location: StudentInformation) {
         dispatch_async(dispatch_get_main_queue()) { () -> Void in
             self.refreshLocations({ () -> Void in
                 if let coord = location.coordinate2D() {

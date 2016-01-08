@@ -20,7 +20,7 @@
 		A90B08F71BF2353C00CBD70A /* UdacityClientConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90B08F61BF2353C00CBD70A /* UdacityClientConvenience.swift */; };
 		A93B8B881C1EEB18003528F5 /* ParseConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B8B871C1EEB18003528F5 /* ParseConstants.swift */; };
 		A93B8B8A1C1EEB40003528F5 /* ParseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B8B891C1EEB40003528F5 /* ParseClient.swift */; };
-		A93B8B8C1C1EED2B003528F5 /* StudentLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B8B8B1C1EED2B003528F5 /* StudentLocation.swift */; };
+		A93B8B8C1C1EED2B003528F5 /* StudentInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B8B8B1C1EED2B003528F5 /* StudentInformation.swift */; };
 		A93B8B8E1C1EF51C003528F5 /* ParseClientConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B8B8D1C1EF51C003528F5 /* ParseClientConvenience.swift */; };
 		A93B8BB01C21690D003528F5 /* LocationCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B8BAF1C21690D003528F5 /* LocationCollectionViewController.swift */; };
 		A93B8BB21C216F8A003528F5 /* AddLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B8BB11C216F8A003528F5 /* AddLocationViewController.swift */; };
@@ -48,7 +48,7 @@
 		A90B08F61BF2353C00CBD70A /* UdacityClientConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UdacityClientConvenience.swift; path = Models/Clients/Udacity/UdacityClientConvenience.swift; sourceTree = "<group>"; };
 		A93B8B871C1EEB18003528F5 /* ParseConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ParseConstants.swift; path = Models/Clients/Parse/ParseConstants.swift; sourceTree = "<group>"; };
 		A93B8B891C1EEB40003528F5 /* ParseClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ParseClient.swift; path = Models/Clients/Parse/ParseClient.swift; sourceTree = "<group>"; };
-		A93B8B8B1C1EED2B003528F5 /* StudentLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StudentLocation.swift; path = Models/StudentLocation.swift; sourceTree = "<group>"; };
+		A93B8B8B1C1EED2B003528F5 /* StudentInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StudentInformation.swift; path = Models/StudentInformation.swift; sourceTree = "<group>"; };
 		A93B8B8D1C1EF51C003528F5 /* ParseClientConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ParseClientConvenience.swift; path = Models/Clients/Parse/ParseClientConvenience.swift; sourceTree = "<group>"; };
 		A93B8BAF1C21690D003528F5 /* LocationCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationCollectionViewController.swift; path = "View Controllers/LocationCollectionViewController.swift"; sourceTree = "<group>"; };
 		A93B8BB11C216F8A003528F5 /* AddLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddLocationViewController.swift; path = "View Controllers/AddLocationViewController.swift"; sourceTree = "<group>"; };
@@ -120,7 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				A90B08EC1BF228D200CBD70A /* Clients */,
-				A93B8B8B1C1EED2B003528F5 /* StudentLocation.swift */,
+				A93B8B8B1C1EED2B003528F5 /* StudentInformation.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -269,7 +269,7 @@
 				A943BAFD1C2C031600A46B94 /* Alert.swift in Sources */,
 				A90B08E91BF1774300CBD70A /* TableViewController.swift in Sources */,
 				A93B8B881C1EEB18003528F5 /* ParseConstants.swift in Sources */,
-				A93B8B8C1C1EED2B003528F5 /* StudentLocation.swift in Sources */,
+				A93B8B8C1C1EED2B003528F5 /* StudentInformation.swift in Sources */,
 				A90B08EF1BF2294900CBD70A /* UdacityConstants.swift in Sources */,
 				A90B08F31BF22AD600CBD70A /* ClientConvenience.swift in Sources */,
 				A90B08F11BF2297A00CBD70A /* UdacityClient.swift in Sources */,

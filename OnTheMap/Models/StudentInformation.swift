@@ -1,5 +1,5 @@
 //
-//  StudentLocation.swift
+//  StudentInformation.swift
 //  OnTheMap
 //
 //  Created by Bill Dawson on 12/14/15.
@@ -9,7 +9,7 @@
 import Foundation
 import MapKit
 
-struct StudentLocation {
+struct StudentInformation {
     var uniqueKey: String?
     var firstName: String?
     var lastName: String?

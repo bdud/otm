@@ -9,8 +9,7 @@
 import Foundation
 
 extension ParseClient {
-    func prepareRequest() -> NSMutableURLRequest {
-        let url = NSURL(string: Constants.ApiUrl)!
+    func prepareRequest(url: NSURL) -> NSMutableURLRequest {
         let req = NSMutableURLRequest(URL: url)
         req.setValue(ClientConvenience.HTTPHeaderKeys.Accept, forHTTPHeaderField: ClientConvenience.HTTPHeaderValues.JSON)
         req.setValue(Constants.AppId, forHTTPHeaderField: HeaderFieldNames.AppId)
@@ -18,18 +17,16 @@ extension ParseClient {
         return req
     }
 
-    func preparePOSTRequest() -> NSMutableURLRequest {
-        let req = prepareRequest()
+    func preparePOSTRequest(url: NSURL) -> NSMutableURLRequest {
+        let req = prepareRequest(url)
         req.HTTPMethod = "POST"
         req.addValue(ClientConvenience.HTTPHeaderValues.JSON, forHTTPHeaderField: ClientConvenience.HTTPHeaderKeys.ContentType)
         return req
     }
 
-    func preparePUTRequest(objectId: String) -> NSMutableURLRequest {
-        let req = preparePOSTRequest()
+    func preparePUTRequest(url: NSURL) -> NSMutableURLRequest {
+        let req = preparePOSTRequest(url)
         req.HTTPMethod = "PUT"
-        let urlString = "\(Constants.ApiUrl)/\(objectId)"
-        req.URL = NSURL(string: urlString)!
         return req
     }
 
