@@ -122,10 +122,10 @@
             </objects>
             <point key="canvasLocation" x="-313" y="-4133"/>
         </scene>
-        <!--On The Map-->
+        <!--TabBarController-->
         <scene sceneID="T6R-U0-pX9">
             <objects>
-                <tabBarController storyboardIdentifier="TabBar" title="On The Map" id="4RR-LD-2oP" customClass="TabBarController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="TabBar" title="On The Map" id="4RR-LD-2oP" userLabel="TabBarController" customClass="TabBarController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" title="On the Map" id="ZFR-fi-fa7">
                         <barButtonItem key="leftBarButtonItem" title="Logout" id="zai-12-JaU">
                             <connections>
@@ -133,12 +133,13 @@
                             </connections>
                         </barButtonItem>
                         <rightBarButtonItems>
-                            <barButtonItem systemItem="refresh" id="QmU-Pm-Qc4">
+                            <barButtonItem style="plain" systemItem="refresh" id="QmU-Pm-Qc4">
                                 <connections>
                                     <action selector="refreshTap:" destination="4RR-LD-2oP" id="gks-eh-n3e"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem image="pin" style="done" id="hel-ZL-rws">
+                            <barButtonItem image="pin" style="plain" id="hel-ZL-rws">
+                                <inset key="imageInsets" minX="0.0" minY="0.0" maxX="-50" maxY="0.0"/>
                                 <connections>
                                     <action selector="addButtonTap:" destination="4RR-LD-2oP" id="kxW-tW-WsO"/>
                                 </connections>
