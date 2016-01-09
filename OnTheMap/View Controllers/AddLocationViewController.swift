@@ -203,7 +203,7 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate {
             self.presentViewController(av, animated: true, completion: nil)
         }
     }
-    
+
     func showActivityInProgress(inProgress: Bool) {
         dispatch_async(dispatch_get_main_queue()) { () -> Void in
             let opacity : Float = inProgress ? 0.5 : 1.0

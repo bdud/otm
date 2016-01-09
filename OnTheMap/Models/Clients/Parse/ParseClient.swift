@@ -42,7 +42,6 @@ class ParseClient {
                 req = self.preparePOSTRequest(Endpoint.PostLocation.url())
             }
 
-            print("URL: \(req.URL!)")
             req.HTTPBody = data
 
             ClientConvenience.sharedInstance().performDataTaskWithRequest(req) { (success, httpStatusCode, errorMessage, responseData) -> Void in
