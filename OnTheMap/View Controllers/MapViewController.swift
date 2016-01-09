@@ -22,7 +22,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, LocationCollection
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
-//        self.refreshLocations(nil)
     }
 
     override func viewWillAppear(animated: Bool) {

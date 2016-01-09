@@ -66,7 +66,21 @@ class ParseClient {
                     return
                 }
 
-                completionHandler(success: true, errorString: nil)
+                // Re-fetch now that data set on server has changed.
+
+                self.fetchLocations({ (success, errorString, data) -> Void in
+                    // We'll let errors "pass by" here (other than logging to console)
+                    // since the primary purpose -- adding/updating a location -- was
+                    // fulfilled.
+                    if let errorString = errorString {
+                        print("While re-fetching after add/update: \(errorString)")
+                    }
+
+                    if let data = data {
+                        self.locations = data
+                    }
+                    completionHandler(success: true, errorString: nil)
+                })
             }
         }
     }
@@ -146,7 +160,7 @@ class ParseClient {
         let req = prepareRequest(Endpoint.LocationOfKey(uniqueKey).url())
 
         ClientConvenience.sharedInstance().performDataTaskWithRequest(req) { (success, httpStatusCode, errorMessage, responseData) -> Void in
-            
+
             self.evaluateFetchLocationResponse(success, httpStatusCode: httpStatusCode, errorMessage: errorMessage, responseData: responseData, completionHandler: { (success, errorString, data) -> Void in
 
                 guard let locations = data else {
