@@ -61,7 +61,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, LocationCollection
     }
 
     func showError(error: String) {
-        Alert.sharedInstance().ok(error, owner: self, completion: nil)
+        Alert.sharedInstance().ok(nil, message: error, owner: self, completion: nil)
     }
 
 

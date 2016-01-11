@@ -126,7 +126,7 @@ class TabBarController: UITabBarController, AddLocationViewControllerDelegate {
     }
 
     func showError(message: String) {
-        Alert.sharedInstance().ok(message, owner: self, completion: nil)
+        Alert.sharedInstance().ok(nil, message: message, owner: self, completion: nil)
     }
 
     func fetchUserInfo() {

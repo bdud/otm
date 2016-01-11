@@ -10,9 +10,9 @@ import UIKit
 
 class Alert: NSObject {
 
-    func ok(message: String, owner: UIViewController, completion: (() -> Void)?) {
+    func ok(title: String?, message: String, owner: UIViewController, completion: (() -> Void)?) {
         dispatch_async(dispatch_get_main_queue()) {
-            let alertController = UIAlertController(title: "Error", message: message, preferredStyle: .Alert)
+            let alertController = UIAlertController(title: title ?? "Error", message: message, preferredStyle: .Alert)
             let okButton = UIAlertAction(title: "OK", style: .Default, handler: nil)
             alertController.addAction(okButton)
             owner.presentViewController(alertController, animated: true, completion: completion)

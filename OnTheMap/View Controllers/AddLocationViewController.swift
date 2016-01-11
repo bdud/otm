@@ -93,7 +93,7 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate {
 
         LocationDataStore.sharedInstance().saveLocation(location) { (errorMessage) -> Void in
             if let errorMessage = errorMessage {
-                self.showErrorMessage(errorMessage)
+                Alert.sharedInstance().ok("Location Submission Failed", message: errorMessage, owner: self, completion: nil)
                 return
             }
             self.delegate?.locationWasSaved(location)
