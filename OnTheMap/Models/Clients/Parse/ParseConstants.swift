@@ -61,7 +61,11 @@ extension ParseClient {
     }
 
     struct Errors {
-        static let Network = "Network Error. Please check your network connection and try again."
+        static let Network = ClientConvenience.Errors.Connection
+        static let Server = "The location data server is experiencing problems. Please try again later."
+        static let NoData = "No location data returned by the server."
+        static let ParseError = "Unable to read the data returned by the location data server."
+        static let BadData = "Data returned by location data server does not conform to the specification."
         static let General = "Unable to complete operation."
     }
 }

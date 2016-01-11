@@ -93,7 +93,7 @@ class ParseClient {
             self.evaluateFetchLocationResponse(success, httpStatusCode: httpStatusCode, errorMessage: errorMessage, responseData: responseData, completionHandler: { (success, errorString, data) -> Void in
 
                 self.locations = data
-                completionHandler(success: success, errorString: errorMessage, data: data)
+                completionHandler(success: success, errorString: errorString, data: data)
             })
         }
     }
@@ -106,37 +106,44 @@ class ParseClient {
             guard success else {
                 if let errorMessage = errorMessage {
                     print(errorMessage)
-                    completionHandler(success: success, errorString: errorMessage, data: nil)
                 }
-                else {
-                    let message = "Unknown error fetching locations"
-                    print(message)
-                    completionHandler(success: success, errorString: message, data: nil)
+
+                guard let httpStatusCode = httpStatusCode else {
+                    // No status code at all == couldn't even hit server.
+                    completionHandler(success: false, errorString: ParseClient.Errors.Network, data: nil)
+                    return
                 }
+
+                if httpStatusCode >= 500 {
+                    completionHandler(success: false, errorString: ParseClient.Errors.Server, data: nil)
+                    return
+                }
+
+                completionHandler(success: false, errorString: ParseClient.Errors.General, data: nil)
                 return
             }
 
             guard let data = responseData else {
                 print("No data returned when fetching locations")
-                completionHandler(success: false, errorString: "No location data found", data: nil)
+                completionHandler(success: false, errorString: ParseClient.Errors.NoData, data: nil)
                 return
             }
 
             guard let result = try? NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0)) else {
                 print("Unable to convert data to JSON")
-                completionHandler(success: false, errorString: "There was a problem reading the data", data: nil)
+                completionHandler(success: false, errorString: ParseClient.Errors.ParseError, data: nil)
                 return
             }
 
             guard let dict = result as? [String: AnyObject] else {
                 print("Parsed data not as expected: \(String(data: data, encoding: NSUTF8StringEncoding))")
-                completionHandler(success: false, errorString: "There was a problem reading the data", data: nil)
+                completionHandler(success: false, errorString: ParseClient.Errors.BadData, data: nil)
                 return
             }
 
             guard let resultsObject = dict[Constants.ResultFieldKey] else {
                 print("\(Constants.ResultFieldKey) not found in returned data")
-                completionHandler(success: false, errorString: "There was a problem reading the data.", data: nil)
+                completionHandler(success: false, errorString: ParseClient.Errors.BadData, data: nil)
                 return
             }
 

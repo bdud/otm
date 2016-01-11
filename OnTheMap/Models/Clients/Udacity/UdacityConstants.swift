@@ -15,7 +15,7 @@ extension UdacityClient {
     }
 
     struct ErrorMessages {
-        static let Connection = "Connection to Udacity failed. Please be sure you are connected to the Internet and try again."
+        static let Connection = ClientConvenience.Errors.Connection
         static let Credentials = "Invalid email address or password."
     }
 

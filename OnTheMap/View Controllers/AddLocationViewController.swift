@@ -11,7 +11,7 @@ import MapKit
 import CoreLocation
 
 protocol AddLocationViewControllerDelegate {
-    func createdLocation(location: StudentInformation)
+    func locationWasSaved(location: StudentInformation)
 }
 
 class AddLocationViewController: UIViewController, UITextFieldDelegate {
@@ -51,10 +51,11 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate {
         locationTextField.resignFirstResponder()
         locationTextField.enabled = false
 
-        findEnteredLocation { (success, placemark) -> Void in
+        findEnteredLocation { (success, placemark, errorMessage) -> Void in
             self.showActivityInProgress(false)
             guard success, let coordinate = placemark?.location?.coordinate else {
-                self.showErrorMessage("No matching location was found.")
+                let errorMessage = errorMessage ?? "No matching location was found."
+                self.showErrorMessage(errorMessage)
                 dispatch_async(dispatch_get_main_queue()) {
                     self.findButton.enabled = true
                     self.locationTextField.enabled = true
@@ -89,10 +90,18 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate {
         location.mediaUrl = linkText
         location.latitude = mapView.annotations[0].coordinate.latitude
         location.longitude = mapView.annotations[0].coordinate.longitude
-        if let delegate = delegate {
-            delegate.createdLocation(location)
+
+        LocationDataStore.sharedInstance().saveLocation(location) { (errorMessage) -> Void in
+            if let errorMessage = errorMessage {
+                self.showErrorMessage(errorMessage)
+                return
+            }
+            self.delegate?.locationWasSaved(location)
+
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.dismissViewControllerAnimated(true, completion: nil)
+            })
         }
-        dismissViewControllerAnimated(true, completion: nil)
     }
 
     // MARK: UIViewController
@@ -142,23 +151,28 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate {
     }
 
 
-    func findEnteredLocation(completion: (success: Bool, placemark: CLPlacemark?) -> Void) {
+    func findEnteredLocation(completion: (success: Bool, placemark: CLPlacemark?, errorMessage: String?) -> Void) {
         let geocoder = CLGeocoder()
 
         geocoder.geocodeAddressString(locationTextField.text!) { (placemarks: [CLPlacemark]?, error: NSError?) -> Void in
             guard error == nil else {
-                print(error?.localizedDescription)
-                completion(success: false, placemark: nil)
+                print(error!.localizedDescription)
+                if error!.domain == kCLErrorDomain && error!.code == CLError.Network.rawValue {
+                    completion(success: false, placemark: nil, errorMessage: ClientConvenience.Errors.Connection)
+                    return
+                }
+
+                completion(success: false, placemark: nil, errorMessage: "Loation not found.")
                 return
             }
 
             guard let placemarks = placemarks else {
                 print("No placemarks returned from geocode search")
-                completion(success: false, placemark: nil)
+                completion(success: false, placemark: nil, errorMessage: "Location not found.")
                 return
             }
 
-            completion(success: true, placemark: placemarks[0])
+            completion(success: true, placemark: placemarks[0], errorMessage: nil)
         }
 
     }

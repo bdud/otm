@@ -12,6 +12,7 @@ import MapKit
 class MapViewController: UIViewController, MKMapViewDelegate, LocationCollectionViewController {
 
     let annotationViewReuseId = "aview"
+    let dataStore = LocationDataStore.sharedInstance()
 
     // MARK: Outlets
 
@@ -45,6 +46,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, LocationCollection
     }
 
     func dropPins(locations: [StudentInformation]) {
+        assert(NSThread.isMainThread())
         var annotations = [MKAnnotation]()
         for loc in locations {
 
@@ -91,34 +93,19 @@ class MapViewController: UIViewController, MKMapViewDelegate, LocationCollection
     // MARK: LocationViewController
 
     func refreshLocations(completion: (() -> Void)?) {
-        let existingAnnotations = mapView.annotations
-        if (existingAnnotations.count > 0) {
-            mapView.removeAnnotations(existingAnnotations)
-        }
-
-        ParseClient.sharedInstance().fetchLocations { (success, errorString, data) -> Void in
-            dispatch_async(dispatch_get_main_queue()) {
-                guard success else {
-                    if let errorString = errorString {
-                        self.showError(errorString)
-                    }
-                    else {
-                        self.showError("An unknown error occurred")
-                    }
-                    if let completion = completion {
-                        completion()
-                    }
-                    return
-                }
-                self.dropPins(data!)
-                if let completion = completion {
-                    completion()
-                }
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            let existingAnnotations = self.mapView.annotations
+            if (existingAnnotations.count > 0) {
+                self.mapView.removeAnnotations(existingAnnotations)
             }
+            if let locations = self.dataStore.cachedLocations {
+                self.dropPins(locations)
+            }
+            completion?()
         }
     }
 
-    func locationWasAdded(location: StudentInformation) {
+    func locationWasSaved(location: StudentInformation) {
         dispatch_async(dispatch_get_main_queue()) { () -> Void in
             self.refreshLocations({ () -> Void in
                 if let coord = location.coordinate2D() {
@@ -127,5 +114,5 @@ class MapViewController: UIViewController, MKMapViewDelegate, LocationCollection
             })
         }
     }
-
+    
 }

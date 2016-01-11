@@ -17,4 +17,8 @@ extension ClientConvenience {
     struct HTTPHeaderValues {
         static let JSON = "application/json"
     }
+
+    struct Errors {
+        static let Connection = "The network appears to be offline. Please check your network connection and try again."
+    }
 }

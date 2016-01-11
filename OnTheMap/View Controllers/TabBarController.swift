@@ -11,6 +11,7 @@ import FBSDKLoginKit
 
 class TabBarController: UITabBarController, AddLocationViewControllerDelegate {
     let addLocationStoryboardID = "addLocationView"
+    let dataStore = LocationDataStore.sharedInstance()
 
     // MARK: Outlets
 
@@ -28,13 +29,12 @@ class TabBarController: UITabBarController, AddLocationViewControllerDelegate {
 
     @IBAction func addButtonTap(sender: AnyObject) {
         guard let accountKey = UdacityConfig.sharedUdacityConfig().AccountKey else {
-            self.showError("Your Udacity account information has not been retrieved. Please logging in again.")
+            self.showError("Your Udacity account information has not been retrieved. Please try logging in again.")
             return
         }
 
         // Check for existing first
-        let parse = ParseClient.sharedInstance()
-        parse.fetchLocationWithUniqueKey(accountKey, completionHandler: { (location, errorMessage) -> Void in
+        dataStore.locationWithUniqueKey(accountKey, completionHandler: { (location, errorMessage) -> Void in
 
             if let errorMessage = errorMessage {
                 self.showError(errorMessage)
@@ -63,18 +63,15 @@ class TabBarController: UITabBarController, AddLocationViewControllerDelegate {
     }
 
     @IBAction func refreshTap(sender: AnyObject) {
-        if let vc = selectedViewController as? LocationCollectionViewController {
-            refreshButton.enabled = false
-            vc.refreshLocations() {
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.refreshButton.enabled = true
-                })
-            }
-        }
+        refresh()
     }
 
-
     // MARK: - UIViewController
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        refresh()
+    }
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -87,25 +84,24 @@ class TabBarController: UITabBarController, AddLocationViewControllerDelegate {
 
     // MARK: AddLocationViewControllerDelegate
 
-    func createdLocation(location: StudentInformation) {
-        let parse = ParseClient.sharedInstance()
-
-        parse.addLocation(location) { (success, errorString) -> Void in
-            guard success else {
-                guard let msg = errorString else {
-                    self.showError(ParseClient.Errors.General)
-                    return
-                }
-                self.showError(msg)
+    func locationWasSaved(location: StudentInformation) {
+        dataStore.queryLocations { (locations, errorMessage) -> Void in
+            if let errorMessage = errorMessage {
+                self.showError(errorMessage)
                 return
             }
 
-            for controller in self.viewControllers! {
+            guard let controllers = self.viewControllers else {
+                return
+            }
+
+            for controller in controllers {
                 if let controller = controller as? LocationCollectionViewController {
-                    controller.locationWasAdded(location)
+                    controller.locationWasSaved(location)
                 }
 
             }
+
         }
     }
 
@@ -151,7 +147,39 @@ class TabBarController: UITabBarController, AddLocationViewControllerDelegate {
                 self.addButton.enabled = true
             })
         })
-        
+    }
+
+    // Tells the data store to requery (which updates its local location cache),
+    // then tells the two view controllers (one per tab) to refresh.
+    func refresh() {
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            self.refreshButton.enabled = false
+        }
+
+        let uiDeferred = {
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.refreshButton.enabled = true
+            })
+        }
+
+        dataStore.queryLocations { (locations, errorMessage) -> Void in
+            defer { uiDeferred() }
+
+            if let errorMessage = errorMessage {
+                self.showError(errorMessage)
+                return
+            }
+
+            guard let controllers = self.viewControllers else {
+                return
+            }
+
+            for controller in controllers {
+                if let controller = controller as? LocationCollectionViewController {
+                    controller.refreshLocations(nil)
+                }
+            }
+        }
     }
     
 }

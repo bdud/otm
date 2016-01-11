@@ -11,7 +11,7 @@ import UIKit
 class TableViewController: UITableViewController, LocationCollectionViewController {
 
     let CellReuseId = "CellReuseId"
-    let parseClient = ParseClient.sharedInstance()
+    let dataStore = LocationDataStore.sharedInstance()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +24,7 @@ class TableViewController: UITableViewController, LocationCollectionViewControll
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let locations = parseClient.locations {
+        if let locations = dataStore.cachedLocations {
             return locations.count
         }
         else {
@@ -35,7 +35,7 @@ class TableViewController: UITableViewController, LocationCollectionViewControll
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(CellReuseId, forIndexPath: indexPath)
 
-        if let locations = parseClient.locations {
+        if let locations = dataStore.cachedLocations {
             let loc = locations[indexPath.row]
             cell.textLabel?.text = "\(loc.firstName!) \(loc.lastName!)"
             cell.detailTextLabel?.text = "\(loc.mediaUrl!)"
@@ -46,11 +46,8 @@ class TableViewController: UITableViewController, LocationCollectionViewControll
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let locations = parseClient.locations {
-            let location = locations[indexPath.row]
-            if let mediaUrlString = location.mediaUrl, url = NSURL(string: mediaUrlString) {
-                UIApplication.sharedApplication().openURL(url)
-            }
+        if let cell = tableView.cellForRowAtIndexPath(indexPath), text = cell.detailTextLabel?.text, url = NSURL(string: text) {
+            UIApplication.sharedApplication().openURL(url)
         }
     }
 
@@ -59,35 +56,32 @@ class TableViewController: UITableViewController, LocationCollectionViewControll
     func refreshLocations(completion: (() -> Void)?) {
         dispatch_async(dispatch_get_main_queue()) { () -> Void in
             self.tableView.reloadData()
-        }
-
-        if let completion = completion {
-            completion()
+            completion?()
         }
     }
 
-    func locationWasAdded(location: StudentInformation) {
-        refreshLocations(nil)
-        focusLocation(location)
+    func locationWasSaved(location: StudentInformation) {
+        refreshLocations() {
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.focusLocation(location)
+            })
+        }
     }
 
     // MARK: - Misc
 
-
     func moveToRow(rowNumber: Int) {
-        dispatch_async(dispatch_get_main_queue()) { () -> Void in
-            self.tableView.selectRowAtIndexPath(NSIndexPath(forRow: rowNumber, inSection: 0), animated: true, scrollPosition: .Middle)
-        }
+        assert(NSThread.isMainThread())
+            tableView.selectRowAtIndexPath(NSIndexPath(forRow: rowNumber, inSection: 0), animated: true, scrollPosition: .Middle)
     }
 
     func focusLocation(location: StudentInformation) {
-        if let uniqueKey = location.uniqueKey, locations = parseClient.locations {
+        assert(NSThread.isMainThread())
+        if let uniqueKey = location.uniqueKey, locations = dataStore.cachedLocations {
             if let index = locations.indexOf({ (location: StudentInformation) -> Bool in
                 return location.uniqueKey == uniqueKey
             }) {
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.moveToRow(index)
-                })
+                self.moveToRow(index)
             }
         }
     }
